@@ -1,0 +1,9 @@
+build/*.js
+config/*.js
+src/assets
+src/api/*
+src/views/*
+src/components/*
+node_modules/*
+dist/*
+.vscode/*

@@ -1,0 +1,242 @@
+<template>
+  <b-container fluid>
+    <b-row>
+      <b-col sm="12">
+        <b-row>
+          <b-col sm="12">
+            <!-- 업로드정보 -->
+            <y-label
+              label="L0000001945"
+              icon="user-edit"
+              color-class="cutstom-title-color"
+            />
+            <div slot="buttonGroup" class="float-right mb-1">
+              <!-- 닫기 -->
+              <y-btn title="L0000000881" @btnClicked="closePopup" />
+            </div>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col sm="12" md="12" lg="12" xl="12" class="col-xxl-12">
+            <y-file-upload
+              ref="fileupload"
+              :attach-file-grp="attachFileGrp"
+              :label="attachFileGrp.label"
+              :drag="attachFileGrp.drag"
+              :multiple="false"
+              :limit="1"
+              :close="true"
+              @closePopup="getList"
+            ></y-file-upload>
+          </b-col>
+        </b-row>
+      </b-col>
+    </b-row>
+    <b-row class="mt-3">
+      <b-col sm="12">
+        <b-col sm="12" class="px-0">
+          <!-- 업로드 및 저장결과 -->
+          <y-data-table
+            ref="dataTable"
+            label="L0000001937"
+            :height="'100'"
+            :minHeight="'100'"
+            :headers="gridUploadHeaderOptions"
+            :items="gridUploadData"
+            :popMode="true"
+            :print="true"
+            :rows="4"
+            :useRownum="false"
+          />
+        </b-col>
+      </b-col>
+    </b-row>
+    <b-row class="mt-3">
+      <b-col sm="12">
+        <b-col sm="12" class="px-0">
+          <!-- 오류정보(실패한 사유에 대한 정보) -->
+          <y-data-table
+            ref="dataTable"
+            label="L0000002022"
+            :height="'200'"
+            :minHeight="'200'"
+            :headers="gridErrorHeaderOptions"
+            :items="gridErrorData"
+            :print="true"
+            :rows="4"
+            :useRownum="false"
+          />
+        </b-col>
+      </b-col>
+    </b-row>
+  </b-container>
+</template>
+
+<script>
+import selectConfig from '@/js/selectConfig';
+import transactionConfig from '@/js/transactionConfig';
+import backendConfig from '@/js/backendConfig.js';
+export default {
+  /** attributes: name, components, props, data **/
+  name: 'check-result-harmful-list-upload',
+  props: {
+    popupParam: {
+      type: Object,
+      default: {
+        muscResearchNo: 0,
+      },
+    },
+  },
+  // TODO: 화살표 함수(=>)는 data에 사용하지 말 것
+  //    data: () => { return { a: this.myProp }}) 화살표 함수가 부모 컨텍스트를 바인딩하기 때문에 this는 예상과 달리 Vue 인스턴스가 아니기 때문에 this.myProp는 undefined로 나옵니다.
+  //    참고url: https://kr.vuejs.org/v2/api/index.html#data
+  data() {
+    return {
+      uploadFile: {
+        file: null,
+      },
+      uploadResult: {
+        classNm: '',
+        totalCount: 0,
+        successCount: 0,
+        failCount: 0,
+      },
+      errorInfo: {
+        classNm: '',
+        failRow: 0,
+        failMessage: '',
+        remark: '',
+      },
+      // 첨부파일 그룹
+      attachFileGrp: {
+        label: 'L0000003030', // 파일업로드
+        taskClassNm: 'MUSC_CHECK_UNIT_UPLOAD',
+        taskKey: '0',
+        createUserId: '',
+        muscResearchNo: '0',
+        showUploadBtn: true,
+        // uploadFile: this.uploadFile,
+      },
+      baseWidth: 9,
+      editable: true,
+      isUploadSubmit: false,
+
+      gridUploadData: [],
+      gridUploadHeaderOptions: [],
+      gridErrorData: [],
+      gridErrorHeaderOptions: [],
+
+      searchExcelUrl: '',
+      resultList: [],
+    };
+  },
+  watch: {},
+  /** Vue lifecycle: created, mounted, destroyed, etc **/
+  beforeCreate() {},
+  created() {},
+  beforeMount() {
+    // TODO : data를 초기화 시켜줌(검색 조건 유지가 필요할 때는 삭제할 것)
+    // 이유 : vue.js는 SPA기반으로 동작하기 때문에 페이지를 이동하더라도 기존 입력된 정보가 그대로 남아 있는 문제가 있음
+    Object.assign(this.$data, this.$options.data());
+    this.init();
+  },
+  mounted() {},
+  beforeDestory() {
+    this.init();
+  },
+  /** methods **/
+  methods: {
+    /** 초기화 관련 함수 **/
+    init() {
+      // URL 셋팅
+      this.searchExcelUrl = selectConfig.hea.harmful.excelUpload.url;
+
+      // TODO : 여기에 초기 설정용 함수를 호출하거나 로직을 입력하세요.
+      // 선택항목 설정
+
+      setTimeout(() => {
+        var nowDate = new Date();
+        this.attachFileGrp.taskKey = nowDate.getTime().toString();
+        this.attachFileGrp.muscResearchNo = this.popupParam.muscResearchNo;
+        this.attachFileGrp.createUserId = this.$store.getters.token;
+      }, 200);
+
+      // 그리드 헤더 설정
+      this.gridUploadHeaderOptions = [
+        {
+          text: 'L0000002520',
+          name: 'totalCount',
+          width: '25%',
+          align: 'center',
+        }, // 전체 Row 수
+        {
+          text: 'L0000004878',
+          name: 'successCount',
+          width: '25%',
+          align: 'center',
+        }, // 유효한 row 수
+        {
+          text: 'L0000001816',
+          name: 'failCount',
+          width: '25%',
+          align: 'center',
+        }, // 실패 Row 수
+      ];
+
+      this.gridErrorHeaderOptions = [
+        {
+          text: 'L0000001814',
+          name: 'failRow',
+          width: '20%',
+          align: 'center',
+        }, // 실패 Row No
+        { text: 'L0000001817', name: 'failMessage', width: '50%' }, // 실패 사유
+        { text: 'L0000001360', name: 'remark', width: '30%' }, // 비고
+      ];
+    },
+    getList(data) {
+      this.$http.url = this.searchExcelUrl;
+      this.$http.type = 'GET';
+      this.$http.param = data;
+      this.$http.request((_result) => {
+        this.resultList = this.$_.clone(_result.data.excelDataList);
+        this.isUploadSubmit = false;
+        this.gridUploadData = _result.data['uploadResult'];
+        this.gridErrorData = _result.data['errorInfo'];
+
+        let alertMessage = 'M0000000445';
+
+        if (_result.data.message) {
+          alertMessage = _result.data.message;
+        }
+        if (_result.data.uploadResult[0].failCount === 0) {
+          alertMessage = 'M0000001596'; // M0000001596
+        }
+
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395',
+          // message: '업로드 및 저장결과, 오류정보를 확인하시기 바랍니다.',
+          message: alertMessage,
+          type: 'info',
+        });
+      });
+    },
+    closePopup() {
+      this.$emit('closePopup', this.resultList);
+    },
+    validateState(_ref) {
+      if (
+        this.veeBag[_ref] &&
+        (this.veeBag[_ref].dirty || this.veeBag[_ref].validated)
+      ) {
+        return !this.errors.has(_ref);
+      }
+      return null;
+    },
+    btnClickedErrorCallback(_result) {
+      this.isUploadSubmit = false; // 반드시 isSubmit을 false로 초기화 하세요. 그렇지 않으면 버튼을 다시 클릭해도 동작하지 않습니다.
+      window.getApp.$emit('APP_REQUEST_ERROR', _result);
+    },
+  },
+};
+</script>

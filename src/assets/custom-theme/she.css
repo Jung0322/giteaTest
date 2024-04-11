@@ -1,0 +1,582 @@
+@charset "UTF-8";
+* {
+  font-family: 'Pretendard', 'malgun gothic', sans-serif;
+}
+b,
+strong {
+  font-weight: 500;
+}
+/* SHE용 커스텀 CSS 추가 2020.08.12 by dylee */
+
+/*메뉴/즐겨찾기 아래 margin */
+.el-tabs__header {
+  margin: 0 0 5px 0 !important;
+  padding: 0 0 3px 0 !important;
+}
+/* left메뉴 높이 조절 */
+.el-tabs__item {
+  height: 36px !important;
+  line-height: 36px !important;
+}
+/* 메뉴/즐겨찾기 border 조정 */
+.el-tabs--card > .el-tabs__header .el-tabs__nav {
+  border-radius: 0 !important;
+  border: 0 !important;
+}
+/* 메뉴/즐겨찾기 border 조정 */
+.el-tabs--card > .el-tabs__header {
+  border-bottom-width: 0px !important;
+}
+/* 메뉴 비활성화시 */
+#tab-menu {
+  color: #c6cad7 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0 !important;
+}
+/* 메뉴 활성화시 */
+#tab-menu.is-active {
+  border-radius: 0 0 5px 0 !important;
+  color: #fff !important;
+  border-right-width: 0px !important;
+  border-bottom-width: 0px !important;
+  font-weight: 500 !important;
+}
+/* 즐겨찾기 비활성화시 */
+#tab-myMenu {
+  color: #c6cad7 !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0 !important;
+}
+/* 즐겨찾기 활성화시 */
+#tab-myMenu.is-active {
+  color: #fff !important;
+  border-left-width: 0px !important;
+  border-bottom-width: 0px !important;
+  font-weight: 500 !important;
+}
+/* 메뉴/즐겨찾기 text 설정 */
+.el-submenu__title > span {
+  padding: 10px;
+  font-weight: 500 !important;
+}
+/* 메뉴 text 설정 */
+.el-menu-item > span {
+  padding: 10px;
+  font-weight: 400 !important;
+}
+/* 좌측 메뉴 아이콘 왼쪽위치 */
+.el-tab-pane .menu-wrapper .el-menu-item {
+  padding-left: 20px !important;
+}
+.el-tab-pane .menu-wrapper .el-submenu .el-submenu__title {
+  padding-left: 20px !important;
+}
+
+/* 좌측 메뉴 높이 설정 */
+.el-tab-pane .menu-wrapper .el-submenu__title {
+  height: 45px !important;
+  line-height: 45px !important;
+}
+/* 숨김메뉴관련 */
+div.el-menu--vertical .el-submenu__title,
+div.el-menu--vertical .el-menu-item {
+  padding-left: 10px !important;
+  height: 35px !important;
+  line-height: 35px !important;
+}
+/* 즐겨찾기 메뉴 높이 설정*/
+.submenu-title-noDropdown {
+  height: 35px !important;
+  line-height: 35px !important;
+}
+/* 메뉴접을 경우 상단 arrow 없앰*/
+div.el-tabs__header
+  .el-tabs__nav-wrap
+  .el-tabs__nav-prev
+  i.el-icon-arrow-left:before {
+  content: '' !important;
+}
+/* 메뉴접을 경우 상단 arrow 없앰*/
+div.el-tabs__header
+  .el-tabs__nav-wrap
+  .el-tabs__nav-next
+  i.el-icon-arrow-right:before {
+  content: '' !important;
+}
+
+/* 좌측메뉴 left 간격 조정 */
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > .el-submenu__title {
+  padding-left: 27px !important;
+  height: 35px !important;
+  line-height: 35px !important;
+}
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > ul.el-menu--inline
+  li.el-menu-item {
+  padding-left: 42px !important;
+}
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > ul.el-menu--inline
+  li.el-menu-item:before {
+  content: '-';
+}
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > ul.el-menu--inline
+  li
+  span {
+  padding-left: 5px !important;
+}
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  .el-submenu__title {
+  padding-left: 42px !important;
+  height: 35px !important;
+  line-height: 35px !important;
+}
+.el-tab-pane
+  > .el-menu
+  > .menu-wrapper
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  > .el-submenu
+  > ul.el-menu--inline
+  > .menu-wrapper.nest-menu
+  .el-menu-item {
+  padding-left: 54px !important;
+}
+.el-tab-pane .el-submenu .el-menu-item {
+  height: 30px !important;
+  line-height: 30px !important;
+  padding-left: 30px !important;
+}
+
+/* 상단 알림 배지 css 수정*/
+.topbadgebtn {
+  width: 27px !important;
+  border-radius: 50%;
+}
+.topbadgeclass .el-badge {
+  margin-top: 0px !important;
+  margin-right: 18px !important;
+}
+.topbadgeclass .el-badge__content {
+  top: 10px !important;
+  right: 13px !important;
+  line-height: 15px !important;
+}
+.topbadgeclass .on .el-badge__content {
+  -webkit-animation: spread 1.2s linear infinite;
+  animation: spread 1.2s linear infinite;
+}
+@-webkit-keyframes spread {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.9);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 6px rgba(245, 108, 108, 0);
+  }
+  to {
+    -webkit-box-shadow: 0 0 0 0 rgba(245, 108, 108, 0);
+  }
+}
+@keyframes spread {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0.9);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(245, 108, 108, 0);
+  }
+  to {
+    box-shadow: 0 0 0 0 rgba(245, 108, 108, 0);
+  }
+}
+/* 상단 TAB메뉴 Context 메뉴 위치변경 */
+.tags-view-container .contextmenu {
+  top: 30px !important;
+}
+/* 상단 TAB메뉴 refresh버튼 제거 */
+.tags-view-item .el-icon-refresh:before {
+  content: '' !important;
+}
+
+/* 그리드 Header Sorting아이콘 위치 변경-우측끝 */
+.el-table .caret-wrapper {
+  float: right !important;
+  margin-top: 1px;
+  right: 5px !important;
+  position: absolute !important;
+}
+.el-table th > .cell {
+  line-height: 32px !important;
+}
+
+/* SIdebar Toggle버튼 위치 이동 */
+.mainView .left_align button {
+  margin-left: 14px !important;
+}
+
+/* navbar 커스텀 클래스 */
+.navbar_custom {
+  display: inline-block !important;
+  width: calc(100% - 220px);
+}
+.navbar_custom .topbadgebtn {
+  background-color: #fff;
+  padding: 0;
+  border: 0;
+}
+.navbar_custom .topbadgebtn i {
+  color: #333;
+  font-size: 24px;
+}
+.navbar_custom .el-badge__content {
+  font-size: 10px;
+  font-weight: 400;
+}
+.navbar_custom .topTilie {
+  padding-top: 0;
+}
+.navbar_custom .el-menu--horizontal > .el-submenu .el-submenu__title {
+  height: 50px;
+  line-height: 50px;
+  border: 0;
+}
+#app .main-container {
+  margin-top: -7px;
+}
+/* 상단 배지 */
+.topbadgeclass {
+  float: right !important;
+  margin-right: 20px !important;
+  margin-top: 7px !important;
+  display: block;
+}
+/* 상단 사용자div */
+.topuserclass {
+  float: right !important;
+}
+/* 사용자 이름 div */
+.usernmlabel {
+  margin-right: 5px;
+}
+
+/* 로그아웃 버튼 */
+.logoutbtn > i {
+  font-size: 1.6em !important;
+  color: red !important;
+}
+.logoutbtn > i:hover {
+  color: red !important;
+  font-weight: 500;
+}
+.logoutbtn:hover:after {
+  border-bottom: 1px solid #fff !important;
+}
+/* [S]안전환경portal 이미지 및 애니메이션 */
+.safelogo {
+  float: left;
+  margin: 12px 0 0 20px;
+  padding-right: 100px;
+  vertical-align: middle;
+}
+.safe-logo-1 {
+  color: #58c400;
+}
+.safe-logo-2 {
+  color: rgba(24, 24, 24, 0.6);
+}
+.safelogo img {
+  vertical-align: middle;
+  margin-top: -7px;
+}
+.safelogo span {
+  font-weight: 700;
+  font-size: 19px;
+  font-stretch: ultra-condensed;
+}
+.safelogo span font {
+  display: inline-block;
+  margin: 0 -0.02em;
+  animation: loading 2.5s infinite alternate;
+}
+.safelogo span font:nth-child(1) {
+  animation-delay: 1.2s;
+}
+.safelogo span font:nth-child(2) {
+  animation-delay: 1.4s;
+}
+.safelogo span font:nth-child(3) {
+  animation-delay: 1.8s;
+}
+.safelogo span font:nth-child(4) {
+  animation-delay: 2s;
+}
+.safelogo span font:nth-child(5) {
+  -webkit-animation: logoanimation 5s ease-in-out 1s 1;
+  animation: logoanimation 3s ease-in-out 2s 1;
+}
+.safelogo span font:nth-child(6) {
+  -webkit-animation: logoanimation 5s ease-in-out 1.8s 2;
+  animation: logoanimation 3s ease-in-out 1.8s 2;
+}
+.safelogo span font:nth-child(7) {
+  -webkit-animation: logoanimation 5s ease-in-out 1.6s 3;
+  animation: logoanimation 3s ease-in-out 1.6s 3;
+}
+.safelogo span font:nth-child(8) {
+  -webkit-animation: logoanimation 5s ease-in-out 1.4s 4;
+  animation: logoanimation 3s ease-in-out 1.4s 4;
+}
+.safelogo span font:nth-child(9) {
+  -webkit-animation: logoanimation 5s ease-in-out 1.2s 5;
+  animation: logoanimation 3s ease-in-out 1.2s 5;
+}
+.safelogo span font:nth-child(10) {
+  -webkit-animation: logoanimation 5s ease-in-out 1s 6;
+  animation: logoanimation 3s ease-in-out 1s 6;
+}
+@keyframes logoanimation {
+  0% {
+    opacity: 1;
+    transform: translateX(0%) rotate(0deg);
+  }
+  25% {
+    opacity: 0;
+    transform: translateX(400%) rotate(360deg);
+  }
+  50% {
+    opacity: 0;
+    transform: translateX(400%) rotate(360deg);
+  }
+  75% {
+    opacity: 0;
+    transform: translateX(400%) rotate(360deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%) rotate(0deg);
+  }
+}
+@keyframes loading {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  76% {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+  80% {
+    opacity: 0.8;
+    transform: scale(0.96);
+  }
+  84% {
+    opacity: 0.7;
+    transform: scale(0.94);
+  }
+  88% {
+    opacity: 0.6;
+    transform: scale(0.92);
+  }
+  92% {
+    opacity: 0.5;
+    transform: scale(0.94);
+  }
+  96% {
+    opacity: 0.4;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+}
+/* [E]안전환경portal 이미지 및 애니메이션 */
+
+@media (max-width: 900px) {
+  .topbadgeclass {
+    display: none;
+  }
+}
+
+/* 상단로고 크기 조정 
+.mainIcon {
+    background-size: 75px !important;
+}
+*/
+/* [S]메인화면-dashboard */
+.maintopLayer {
+  padding-top: 15px !important;
+}
+.dashboardsettingBtn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+}
+.cardrow .portletitem:last-child {
+  padding-right: 15px !important;
+}
+.cardrow .portletitem {
+  padding: 0px 2px 0px 6px;
+}
+@media (max-width: 1199px) {
+  .cardrow .portletitem {
+    padding-left: 0px !important;
+    padding-right: 15px !important;
+  }
+}
+/* [E]메인화면-dashboard */
+
+.tags-view-item {
+  border-radius: 3px !important;
+}
+
+/* 팝업 레이아웃 공백처리 */
+.el-dialog__body .container-fluid {
+  padding-bottom: 10px;
+}
+.el-dialog__body .container-fluid > .mt-3 {
+  margin-top: 0px !important;
+}
+.el-dialog__body .container-fluid > .row {
+  padding-top: 10px;
+}
+
+/* app-main화면 타이틀 위치 중간정렬 */
+.app-main > .container-fluid > .card > .card-header {
+  line-height: 28px;
+}
+.app-main > .container-fluid > .card > .card-header.bg-transparent {
+  border-color: rgba(0, 0, 0, 0.1);
+  font-weight: 500 !important;
+}
+/* app-main에 card클래스에 border zero처리 */
+.app-main > .container-fluid > .card {
+  border-width: 0px !important;
+}
+/* 검색창 접기 펼치기 시 공백 제거 */
+.app-main > .container-fluid > .card > .card-body {
+  padding-top: 0px !important;
+}
+#divSearch {
+  margin-top: 15px !important;
+}
+
+/* router-link 탭 닫기버튼 위치/크기/Hover시 색상 변경 */
+.tags-view-item .el-icon-close {
+  margin-right: -4px !important;
+}
+.tags-view-item .el-icon-close::before {
+  font-weight: 600;
+  font-size: 14px !important;
+}
+.tags-view-item.active .el-icon-close:hover {
+  background: #fff !important;
+  color: #000 !important;
+}
+/* SNB(Side Navigation Bar) 이미지 아이콘 정렬 및 크기 일괄조정 */
+.menu-wrapper .el-submenu font {
+  vertical-align: top;
+}
+.menu-wrapper .el-submenu svg,
+.menu-wrapper .el-menu-item svg {
+  width: 13px !important;
+}
+.menu-wrapper > .el-submenu > .el-submenu__title > span {
+  font-size: 15px;
+}
+.menu-wrapper.nest-menu > .el-submenu > .el-submenu__title > span {
+  font-size: 14px;
+}
+.menu-wrapper.nest-menu > .el-submenu > .el-submenu__title {
+  height: 38px;
+}
+/* 팝업창 닫기 버튼 */
+.custom-dialog-title div {
+  float: right;
+  display: inline;
+}
+.custom-dialog-title div button {
+  border-width: 0px !important;
+  background: inherit !important;
+  padding: 0px !important;
+}
+.custom-dialog-title div button .el-icon-close {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+}
+.custom-dialog-title div button .el-icon-close:hover {
+  color: #a5a2a2 !important;
+}
+
+.el-table__row .cell .el-button--small {
+  padding: 6px 0px !important;
+}
+/* 대시보드 */
+.text-muted {
+  display: none;
+}
+.contents-dashboard .el-button--text {
+  color: #777;
+  font-size: 15px !important;
+}
+.contents-dashboard.row {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+.contents-dashboard.row > [class*='col-'] {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+@media (min-width: 992px) and (max-width: 1600px) {
+  .contents-dashboard .col-lg-3,
+  .contents-dashboard .col-lg-2 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+  .contents-dashboard .col-lg-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

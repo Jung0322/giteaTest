@@ -1,0 +1,12 @@
+@charset "UTF-8";
+/* SHE IE용 커스텀 CSS 추가 2021.01.13 by dylee */
+/* timepicker 사이즈 조절 */
+.mx-datepicker-main.mx-datepicker-popup .mx-datepicker-content .mx-datepicker-body .mx-range-wrapper {
+    width: 400px;
+}
+body {
+    overflow: hidden;
+}
+.custom-dialog-title div button {
+    background: #477bda !important;
+}
