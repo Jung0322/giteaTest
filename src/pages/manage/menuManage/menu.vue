@@ -231,6 +231,12 @@ export default {
           style: 'center-align',
         }, // 메뉴레벨
         {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004843'),
+          dataField: 'menuKind',
+          width: '80',
+          style: 'center-align',
+        }, // 종류
+        {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002601'), // 정렬순서
           dataField: 'sortOrder',
           width: '80',
