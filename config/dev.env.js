@@ -1,6 +1,6 @@
 module.exports = {
-  NODE_ENV: '"development"',
+  NODE_ENV: '"production"',
   ENV_CONFIG: '"dev"',
-  BASE_API: '"http://localhost:8080"',
-  PUBLIC_PATH: '""',
+  BASE_API: '"/v2"',
+  PUBLIC_PATH: '"/v2/"',
 };

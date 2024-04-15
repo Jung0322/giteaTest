@@ -146,7 +146,7 @@ export default new Router({
   scrollBehavior: () => ({
     y: 0,
   }),
-  base: process.env.NODE_ENV === 'production' ? '/v2/' : '/',
+  base: process.env.PUBLIC_PATH,
   routes: constantRouterMap,
   mode: 'history', // # 제거
 });
