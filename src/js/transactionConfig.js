@@ -1741,9 +1741,58 @@ let transactionConfig = {
         url: '/api/rsa/planmgmt/planmgmt/{0}',
       },
     },
+    planmgmt2: {
+      insert: {
+        url: '/api/rsa/planmgmt2/planmgmt',
+      },
+      insert2: {
+        url: '/api/rsa/planmgmt2/planmgmt2',
+      },
+      insertAssessJob: {
+        url: '/api/rsa/planmgmt2/createAssessJob',
+      },
+      insertReEval: {
+        url: '/api/rsa/planmgmt2/importantPlanmgmtInsert',
+      },
+      edit: {
+        url: '/api/rsa/planmgmt2/planmgmt',
+      },
+      edit2: {
+        url: '/api/rsa/planmgmt2/updateRiskAssessPlan',
+      },
+      edit3: {
+        url: '/api/rsa/planmgmt2/updateRiskAssessResult',
+      },
+      appr: {
+        url: '/api/rsa/planmgmt2/apprCompleteRiskAssessPlan',
+      },
+      apprResult: {
+        url: '/api/rsa/planmgmt2/apprCompleteRiskAssessResult',
+      },
+      delete: {
+        url: '/api/rsa/planmgmt2/planmgmt/{0}',
+      },
+      deleteRslt: {
+        url: '/api/rsa/planmgmt2/deletePlanmgmtRslt/{0}/{1}/{2}',
+      },
+      deleteUploadPlan: {
+        url: '/api/rsa/planmgmt2/deletePlanmgmtUploadPlan/{0}',
+      },
+      deleteUploadRslt: {
+        url: '/api/rsa/planmgmt2/deletePlanmgmtUploadRslt/{0}/{1}/{2}',
+      },
+      completeResult: {
+        url: '/api/rsa/planmgmt2/completeResultmgmt',
+      },
+    },
     planmgmtdeptlist: {
       delete: {
         url: '/api/rsa/planmgmt/planmgmtdeptlist',
+      },
+    },
+    planmgmtdeptlist2: {
+      delete: {
+        url: '/api/rsa/planmgmt2/planmgmtdeptlist',
       },
     },
     resultmgmt: {
@@ -1752,6 +1801,17 @@ let transactionConfig = {
       },
       delete: {
         url: '/api/rsa/planmgmt/resultmgmt/{0}',
+      },
+    },
+    resultmgmt2: {
+      insert: {
+        url: '/api/rsa/planmgmt2/resultmgmt',
+      },
+      completeAppr: {
+        url: '/api/rsa/planmgmt2/resultmgmtApprComplete',
+      },
+      delete: {
+        url: '/api/rsa/planmgmt2/resultmgmt/{0}',
       },
     },
     assessType: {

@@ -8,22 +8,31 @@
 <template>
   <b-container fluid>
     <y-search-box :gridOptions="gridOptions" @enter="getList">
+      <div slot="header">
+        <y-label label="L0000000327" />
+        <div class="float-right">
+          <!-- 검색 -->
+          <y-btn title="L0000000327" color="green" @btnClicked="getList" />
+        </div>
+      </div>
       <b-row slot="search">
         <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
+          <!-- 사업장 -->
           <y-plant type="search" :width="8" v-model="searchParam.plantCd" />
         </b-col>
         <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
           <!-- 대상년도 -->
           <y-datepicker
             :width="8"
+            name="period"
+            label="대상년도"
             type="year"
-            name="assessYear"
-            label="L0000004449"
-            :default="searchParam.assessYear"
-            v-model="searchParam.assessYear"
+            :default="searchParam.period"
+            v-model="searchParam.period"
           />
         </b-col>
-        <!-- 평기기법 -->
+
+        <!-- 평가기법 -->
         <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
           <y-select
             :width="8"
@@ -31,9 +40,9 @@
             itemText="codeNm"
             itemValue="code"
             ui="bootstrap"
-            label="L0000003416"
-            name="assessTypeCd"
-            v-model="searchParam.assessTypeCd"
+            label="평가기법"
+            name="classificationCd"
+            v-model="searchParam.classificationCd"
           ></y-select>
         </b-col>
         <!-- 구분 -->
@@ -44,9 +53,9 @@
             itemText="codeNm"
             itemValue="code"
             ui="bootstrap"
-            label="L0000000686"
-            name="regRegdemCd"
-            v-model="searchParam.regRegdemCd"
+            label="구분"
+            name="regRegdem"
+            v-model="searchParam.regRegdem"
           ></y-select>
         </b-col>
         <!-- 평가명 -->
@@ -59,46 +68,28 @@
             v-model="searchParam.assessNm"
           ></y-text>
         </b-col>
-        <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-4">
-          <!-- 단계/상태 -->
-          <b-row>
-            <b-col sm="4">
-              <y-label label="L0000005147" />
-            </b-col>
-            <b-col sm="4">
-              <y-select
-                :width="12"
-                :disabled="true"
-                :comboItems="statusItem"
-                itemText="codeNm"
-                itemValue="code"
-                ui="bootstrap"
-                name="statusCd"
-                v-model="searchParam.statusCd"
-              ></y-select>
-            </b-col>
-            <b-col sm="4">
-              <y-select
-                :width="12"
-                :comboItems="stateItems"
-                itemText="codeNm"
-                itemValue="code"
-                ui="bootstrap"
-                name="stateCd"
-                v-model="searchParam.stateCd"
-              ></y-select>
-            </b-col>
-          </b-row>
+
+        <!-- 단계/상태 -->
+        <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
+          <y-select
+            :width="8"
+            :comboItems="assessStepCdItems"
+            itemText="codeNm"
+            itemValue="code"
+            ui="bootstrap"
+            label="단계/상태"
+            name="assessStepCd"
+            v-model="searchParam.assessStepCd"
+          ></y-select>
         </b-col>
-        <!-- 주관부서 -->
+
+        <!-- 주관팀 -->
         <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
           <y-tree-dept
             type="search"
-            label="L0000005015"
-            name="mainDeptCd"
-            v-model="searchParam.mainDeptCd"
-            :deptSubYn="searchParam.deptSubYn"
-            @setDeptSubYn="setDeptSubYn"
+            label="주관팀"
+            name="deptCd"
+            v-model="searchParam.deptCd"
           />
           <!-- 
               하위부서 포함 조회 위해 아래 코드 추가
@@ -106,40 +97,33 @@
               @setDeptSubYn="setDeptSubYn"
              -->
         </b-col>
-        <!-- 평가기한초과 -->
-        <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-          <y-checkbox
-            :width="8"
-            :comboItems="[
-              { text: '', value: 'Y' },
-              { text: '', value: 'N' },
-            ]"
-            ui="bootstrap"
-            name="searchParam.yearChk"
-            :useDefault="true"
-            label="L0000004971"
-            v-model="searchParam.yearChk"
-          />
-        </b-col>
       </b-row>
     </y-search-box>
     <!-- 검색 결과 테이블 -->
-    <!-- <b-row class="mt-3">
+    <b-row class="mt-3">
       <b-col sm="12">
         <b-col sm="12" class="px-0">
           <div slot="buttonGroup" class="float-right mb-1">
-             신규등록 
+            <!-- 계획등록 -->
             <y-btn
               v-if="editable"
-              title="L0000001789"
+              title="무계획 결과 등록"
               color="orange"
               @btnClicked="openPopup"
               @btnClickedErrorCallback="btnClickedErrorCallback"
             />
-             검색 
-            <y-btn title="L0000000327" color="green" @btnClicked="getList" />
+            <!-- 출력 -->
+            <!-- <y-btn
+              v-if="editable"
+              title="출력"
+              color="black"
+              @btnClicked="openPopup"
+              @btnClickedErrorCallback="btnClickedErrorCallback"
+            /> -->
+            <!-- 검색 -->
+            <!-- <y-btn title="L0000000327" color="green" @btnClicked="getList" /> -->
           </div>
-           평가계획 관리 목록 
+          <!-- 평가계획 목록 -->
           <y-data-table
             ref="dataTable"
             :height="gridOptions.height"
@@ -149,33 +133,21 @@
             :use-paging="true"
             @tableLinkClicked="tableLinkAccidentTitleClicked"
             :cellClassName="tableCellClassName"
-            label="L0000004974"
-          ></y-data-table>
+            label="평가계획 목록"
+            v-model="selectedValue"
+          >
+            <el-table-column
+              :selectable="selectCheck"
+              type="selection"
+              slot="selection"
+              align="center"
+              width="55"
+            ></el-table-column>
+          </y-data-table>
         </b-col>
       </b-col>
-    </b-row> -->
-    <b-row class="grid-height grid-box">
-      <b-col sm="12" class="h100p">
-        <y-auigrid
-          ref="yAuiGrid"
-          :name="gridOptions.name"
-          :headers="gridOptions.header"
-          :btns="gridOptions.btns"
-          :height="gridOptions.height"
-          :label="this.$comm.getLangSpecInfoLabel('L0000004974')"
-          :useExcelExport="false"
-          :enableCellMerge="true"
-          :enableSorting="true"
-          :showGridSetSave="true"
-          :useContextMenu="true"
-          :enableRightDownFocus="true"
-          :showGridCtrl="true"
-          @openPopup="openPopup"
-          @getList="getList"
-          @cellClick="cellClickHandler"
-        />
-      </b-col>
     </b-row>
+
     <y-dialog :param="popupOptions"></y-dialog>
   </b-container>
 </template>
@@ -190,26 +162,24 @@ export default {
   data: () => ({
     searchParam: {
       plantCd: '', // 사업장
-      assessYear: '', // 대상년도
+      period: [], // 대상년도
       assessNm: '',
-      assessTypeCd: '',
-      regRegdemCd: '', // 구분
+      classificationCd: '',
+      regRegdem: '', // 구분
       yearChk: '',
       riskType: '',
       stateCd: '', // 상태
       apprStatusCd: '', // 결재상태
       deptSubYn: 'Y', // 하위부서여부 사용
-      mainDeptCd: '',
+      deptCd: '',
       statusCd: null,
+      assessStepCd: '', // 단계, 상태
     },
     gridOptions: {
-      name: 'planmgmt',
-      btns: [],
       header: [],
       data: [],
       height: 'auto',
     },
-    YAuiGrid: null,
     popupOptions: {
       target: null,
       title: '',
@@ -222,24 +192,24 @@ export default {
     editable: false,
     rsaAssessTypeItems: [], // 기법
     rsaRegRegdemItems: [], // 구분
+    selectedValue: [],
     stateItems: [], // 상태
     statusItem: [{ code: null, codeNm: '계획' }], // 단계
     searchUrl: '',
     companyEditable: false, // 전사 권한
     plantEditable: false, // 사업장 권한
     deptEditable: false, // 일반 권한
+    excelUrl: '',
+    assessStepCdItems: [], // 단계, 상태
   }),
   //* Vue lifecycle: created, mounted, destroyed, etc */
   beforeCreate() {},
   created() {},
   beforeMount() {
     Object.assign(this.$data, this.$options.data());
-    this.init();
-    window.addEventListener('resize', this.resizeGrid);
   },
   mounted() {
-    this.YAuiGrid = this.$refs.yAuiGrid;
-    this.resizeGrid();
+    this.init();
   },
   beforeDestroy() {},
   //* methods */
@@ -251,15 +221,21 @@ export default {
     },
     init() {
       this.editable = this.$route.meta.editable;
-
-      this.searchParam.assessYear = this.$comm.moment().format('YYYY');
+      this.searchParam.plantCd = this.$store.getters.plantCd;
+      this.searchParam.period = this.$comm.moment().format('YYYY');
+      this.excelUrl = selectConfig.saf.imprActStd.downLoad;
       // Url Setting
-      this.searchUrl = selectConfig.rsa.planmgmt.list.url;
+      this.searchUrl = selectConfig.rsa.planmgmt.list2.url;
       this.$comm.getComboItems('RSA_ASSESS_TYPE', true).then((_result) => {
         this.rsaAssessTypeItems = _result;
       });
+      // 평가구분
       this.$comm.getComboItems('RSA_REG_REGDEM', true).then((_result) => {
         this.rsaRegRegdemItems = _result;
+      });
+      // 단계, 상태
+      this.$comm.getComboItems('COM_STATE', true).then((_result) => {
+        this.assessStepCdItems = _result;
       });
       this.$comm.getComboItems('COM_STATE', true).then((_result) => {
         this.stateItems = _result.filter((v) => v.code !== 'STATE1');
@@ -290,130 +266,82 @@ export default {
       } // 일반권한
       else {
         this.deptEditable = true;
-        this.searchParam.mainDeptCd = this.$store.getters.deptCd;
+        this.searchParam.deptCd = this.$store.getters.deptCd;
       }
 
       // 그리드 헤더 설정
       this.gridOptions.header = [
+        // 사업장
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000001415'),
-          dataField: 'plantNm',
-          width: '7%',
+          text: 'L0000001415',
+          name: 'plantNm',
+          width: '100px',
+          align: 'center',
         },
+        // 평가명
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000003416'),
-          dataField: 'assessTypeNm',
-          width: '7%',
+          text: 'L0000003081',
+          name: 'assessNm',
+          width: '90px',
+          align: 'center',
+          url: true,
         },
+        // 평가구분
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000003081'),
-          dataField: 'assessNm',
-          width: '15%',
-          style: 'left-align',
-          renderer: {
-            type: 'LinkRenderer',
-            baseUrl: 'javascript',
-            jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
+          text: '평가구분',
+          name: 'regRegemNm',
+          width: '180px',
+          align: 'left',
         },
+        // 진행단계
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
-          dataField: 'regRegdemNm',
-          width: '10%',
+          text: '진행단계',
+          name: 'assessStepNm',
+          width: '80px',
+          align: 'center',
+          url: true,
         },
+        // 평가팀
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000005015'),
-          dataField: 'mainDeptNm',
-          width: '10%',
+          text: '평가팀',
+          name: 'deptNm',
+          width: '120px',
+          align: 'center',
         },
+        // 분류
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004449'),
-          dataField: 'assessYear',
-          width: '10%',
+          text: '분류',
+          name: 'classificationCd',
+          width: '80px',
+          align: 'center',
         },
+        // 평가기간
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004972'),
-          dataField: 'stateNm',
-          width: '10%',
-          renderer: {
-            type: 'LinkRenderer',
-            baseUrl: 'javascript',
-            jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
+          text: '평가기간',
+          name: 'assessYear',
+          width: '110px',
+          align: 'center',
         },
+        // 평가담당자
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000002355'),
-          dataField: 'createUserNm',
-          width: '10%',
+          text: '평가담당자',
+          name: 'createUserNm',
+          width: '110px',
+          align: 'center',
         },
+        // 작성일
         {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000002352'),
-          dataField: 'createDt',
-          width: '10%',
-        },
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000000927'),
-          dataField: 'deptCnt',
-          width: '7%',
-          renderer: {
-            type: 'LinkRenderer',
-            baseUrl: 'javascript',
-            jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
-        },
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000005011'),
-          dataField: 'deptNCnt',
-          width: '7%',
-          renderer: {
-            type: 'LinkRenderer',
-            baseUrl: 'javascript',
-            jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
-        },
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004971'),
-          dataField: 'overDateCnt',
-          width: '7%',
-          styleFunction: (
-            rowIndex,
-            columnIndex,
-            value,
-            headerText,
-            item,
-            dataField
-          ) => {
-            if (value > 0) {
-              return 'row-color';
-            } else {
-              return 'row-color2';
-            }
-          },
-        },
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004735'),
-          dataField: 'deptYCnt',
-          width: '7%',
-          renderer: {
-            type: 'LinkRenderer',
-            baseUrl: 'javascript',
-            jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
+          text: 'L0000002352',
+          name: 'createDt',
+          width: '120px',
+          align: 'center',
         },
       ];
-      this.gridOptions.btns = [
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000001789'),
-          color: 'orange',
-          btnClicked: 'openPopup',
-        },
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000000327'),
-          color: 'green',
-          btnClicked: 'getList',
-        },
-      ];
+
       this.getList(); // 평가계획 목록 조회
+    },
+    selectCheck() {
+      return true;
     },
 
     /**
@@ -422,35 +350,68 @@ export default {
      * header : 헤더 정보
      * data : 클릭한 col의 row 정보
      */
-    cellClickHandler(event) {
-      if (event.dataField === 'stateNm') {
-        this.showApprProgressPopup(event.item);
-      } else if (
-        event.dataField === 'deptCnt' ||
-        event.dataField === 'deptNCnt' ||
-        event.dataField === 'overDateCnt' ||
-        event.dataField === 'deptYCnt'
-      ) {
-        event.item.apprFlag = event.dataField;
-        this.openDeptListPopup(event.item);
-      } else if (event.dataField === 'assessNm') {
-        this.openPopup(event.item);
-      }
-    },
     tableLinkAccidentTitleClicked(header, data) {
-      if (header.name === 'stateNm') {
+      if (header.name === 'assessStepNm') {
         this.showApprProgressPopup(data);
-      } else if (
-        header.name === 'deptCnt' ||
-        header.name === 'deptNCnt' ||
-        header.name === 'overDateCnt' ||
-        header.name === 'deptYCnt'
-      ) {
-        data.apprFlag = header.name;
-        this.openDeptListPopup(data);
       } else {
         this.openPopup(data);
       }
+
+      // else if (
+      //   header.name === 'deptCnt' ||
+      //   header.name === 'deptNCnt' ||
+      //   header.name === 'overDateCnt' ||
+      //   header.name === 'deptYCnt'
+      // ) {
+      //   data.apprFlag = header.name;
+      //   this.openDeptListPopup(data);
+      // } else {
+      //   this.openPopup(data);
+      // }
+    },
+    btnDownload() {
+      if (!this.selectedValue || !this.selectedValue.length) {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395', // 안내
+          message: 'L0000005853', // 출력할 개선사항을 선택해주세요.
+        });
+        return;
+      }
+      let assessPlanNos = this.$_.flatMap(this.gridOptions.data, (data) => {
+        return data.assessPlanNo;
+      });
+      let thisVue = this;
+      let _comm = this.$comm;
+      this.$http.url = this.excelUrl; // BASE64를 UTF-8인코딩한 바이트로 다운받음 (그렇지 않으면 FRONT에서 JSON이 깨짐)
+      this.$http.param = { assessPlanNos };
+      this.$http.type = 'POST';
+      this.$http.request(
+        (_result) => {
+          let fileOrgNm = '위험성평가 계획_' + this.$comm.getToday() + '.xlsx';
+          var url = window.URL || window.webkitURL;
+          let link = document.createElement('a');
+          // let fileOrgNm = '한글.xlsx'
+          let blob = thisVue.$comm.base64ToBlob(_result.data);
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, fileOrgNm);
+          } else {
+            let link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileOrgNm;
+            link.click();
+          }
+        },
+        (_error) => {
+          this.pageAlert = {
+            alertType: 'error',
+            alertMsg: this.gm(
+              'common.file.download.error.msg',
+              '오류가 발생했습니다.'
+            ),
+          };
+        }
+      );
+      // this.$comm.exportFile(this.excelUrl, { assessPlanNos }, 'POST');
     },
     openDeptListPopup(data) {
       this.popupOptions.target = () =>
@@ -476,10 +437,11 @@ export default {
       this.popupOptions.closeCallback = this.closePopup;
     },
     openPopup(data) {
-      this.popupOptions.target = () => import(`${'./planmgmtDetail.vue'}`);
+      this.popupOptions.target = () =>
+        import(`${'./processResultmgmtDetail.vue'}`);
       this.popupOptions.width = '90%';
       this.popupOptions.visible = true;
-      this.popupOptions.title = 'L0000004975'; // '평가계획 관리 상세 등록/수정';
+      this.popupOptions.title = '평가결과 관리 상세'; // '평가계획 등록';
       this.popupOptions.param = data
         ? data
         : { assessPlanNo: 0, riskType: this.searchParam.riskType };
@@ -497,7 +459,6 @@ export default {
           if (this.companyEditable) {
             // 전사권한 : 전체 건
             this.gridOptions.data = this.$_.clone(_result.data);
-            this.YAuiGrid.setGridData(this.gridOptions.data);
           } else if (this.plantEditable) {
             // 사업장권한 : 내 사업장 등록 건
             this.gridOptions.data = this.$_.clone(
@@ -505,17 +466,15 @@ export default {
                 (v) => v.plantCd === this.$store.getters.plantCd
               )
             );
-            this.YAuiGrid.setGridData(this.gridOptions.data);
           } else if (this.deptEditable) {
             // 일반권한 : 내 부서 등록 건 + 타 부서 평가완료 건
             this.gridOptions.data = this.$_.clone(
               _result.data.filter(
                 (v) =>
-                  v.mainDeptCd === this.$store.getters.deptCd ||
+                  v.deptCd === this.$store.getters.deptCd ||
                   v.stepCd === 'BAPSG'
               )
             );
-            this.YAuiGrid.setGridData(this.gridOptions.data);
           }
 
           this.$comm.pushCookie(this.searchParam);
@@ -542,14 +501,6 @@ export default {
     btnClickedErrorCallback(_result) {
       window.getApp.$emit('APP_REQUEST_ERROR', _result);
     },
-    resizeGrid() {
-      let _height = window.innerHeight - 385;
-      if (window.innerHeight < 500) {
-        _height = 250;
-      }
-
-      this.YAuiGrid.resize(null, _height);
-    },
     setDeptSubYn(_result) {
       // 하위부서 tree에서 값이 변경될 경우 현재값 변경
       this.searchParam.deptSubYn = _result;
@@ -559,13 +510,7 @@ export default {
 };
 </script>
 <style>
-.row-color {
+.row-color .el-button {
   color: red !important;
-}
-.row-color2 {
-  color: #0a85e7 !important;
-}
-.row-color3 {
-  color: #333333 !important;
 }
 </style>

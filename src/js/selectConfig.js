@@ -150,6 +150,9 @@ let selectConfig = {
       leveldepts: {
         url: 'api/manage/leveldepts',
       },
+      getProcess: {
+        url: 'api/manage/process/{0}',
+      },
     },
     user: {
       list: {
@@ -2584,6 +2587,95 @@ let selectConfig = {
         url: '/api/rsa/planmgmt/planmgmtimprstatus/{0}',
       },
     },
+    planmgmt2: {
+      list: {
+        url: '/api/rsa/planmgmt2/planmgmtlists',
+      },
+      list2: {
+        url: '/api/rsa/planmgmt2/planmgmtlists2',
+      },
+      list4: {
+        url: '/api/rsa/planmgmt2/planmgmtlists4',
+      },
+      list5: {
+        url: '/api/rsa/planmgmt2/planmgmtlists5',
+      },
+      list6: {
+        url: '/api/rsa/planmgmt2/planmgmtlists6',
+      },
+      get: {
+        url: '/api/rsa/planmgmt2/planmgmtinfo/{0}',
+      },
+      getRevisionList: {
+        url: '/api/rsa/planmgmt2/revisionList/{0}',
+      },
+      getResult: {
+        url: '/api/rsa/planmgmt2/planmgmtResultinfo/{0}',
+      },
+      getCompleteResultList: {
+        url: '/api/rsa/planmgmt2/getCompleteResultList',
+      },
+      getRevList: {
+        url: '/api/rsa/planmgmt2/showRiskAssessResultList',
+      },
+      getExcelSample: {
+        url: '/api/rsa/planmgmt2/excelsample',
+      },
+      getExcelUpload: {
+        url: '/api/rsa/planmgmt2/resultExcelupload',
+      },
+      getPlanExcelDown: {
+        url: '/api/rsa/planmgmt2/printPlanmgmt',
+      },
+      getResultExcelDown: {
+        url: '/api/rsa/planmgmt2/printPlanmgmt2',
+      },
+      getResultZipDown: {
+        url: '/api/rsa/planmgmt2/zipPlanmgmt',
+      },
+      getRsltNos: {
+        url: '/api/rsa/planmgmt2/getRsltNos',
+      },
+      get2: {
+        url: '/api/rsa/planmgmt2/planmgmtinfo2/{0}',
+      },
+      getAppr: {
+        url: '/api/rsa/planmgmt2/apprRiskAssessPlan/{0}',
+      },
+      getProcessPlanAppr: {
+        url: '/api/rsa/planmgmt2/apprProcessAssessPlan/{0}',
+      },
+      getProcessResultAppr: {
+        url: '/api/rsa/planmgmt2/apprProcessAssessResult/{0}',
+      },
+      getApprResult: {
+        url: '/api/rsa/planmgmt2/apprRiskAssessResult/{0}',
+      },
+      deptList: {
+        url: '/api/rsa/planmgmt2/planmgmtdetplist',
+      },
+      getstatus: {
+        url: '/api/rsa/planmgmt2/planmgmtstatus/{0}',
+      },
+      getimprstatus: {
+        url: '/api/rsa/planmgmt2/planmgmtimprstatus/{0}',
+      },
+      getClassificationList: {
+        url: '/api/rsa/planmgmt2/classificaionList',
+      },
+      getClassificationListForDepts: {
+        url: '/api/rsa/planmgmt2/classificaionListForDepts',
+      },
+      getProcessList: {
+        url: '/api/rsa/planmgmt2/processList',
+      },
+      getPlanmgmtPrint: {
+        url: '/api/rsa/planmgmt2/printPlanmgmtReport',
+      },
+      getDeptAlias: {
+        url: '/api/rsa/planmgmt2/deptInfo',
+      },
+    },
     resultmgmt: {
       list: {
         url: '/api/rsa/planmgmt/resultmgmtlists',
@@ -2593,6 +2685,18 @@ let selectConfig = {
       },
       status: {
         url: '/api/rsa/planmgmt/resultstatus',
+      },
+    },
+    // resultmgmt2 : 한화에너지 패키지 이전하며 옮겨둠, 추후 미사용시 삭제 예정
+    resultmgmt2: {
+      list: {
+        url: '/api/rsa/planmgmt2/resultmgmtlists',
+      },
+      get: {
+        url: '/api/rsa/planmgmt2/resultmgmtinfo/{0}/{1}',
+      },
+      status: {
+        url: '/api/rsa/planmgmt2/resultstatus',
       },
     },
     assessPlan: {
