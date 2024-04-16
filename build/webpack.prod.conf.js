@@ -44,7 +44,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
-    publicPath: process.env.env_config === 'dev' ? '/v2/' : '/',
+    publicPath: process.env.env_config === 'dev' ? '/lsm/' : '/',
     filename: utils.assetsPath('js/[name].[chunkhash:8].js'),
     chunkFilename: utils.assetsPath('js/[name].[chunkhash:8].js'),
   },
@@ -113,7 +113,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         seen.add(chunkname);
         return `chunk-${chunkname}`;
       } else {
-        return modules[0].id;
+        return modules[0].id.toLowerCase();
       }
     }),
     // keep module.id stable when vender modules does not change
