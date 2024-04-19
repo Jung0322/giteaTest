@@ -94,6 +94,7 @@ export default {
       gridOptions: {
         header: [],
         data: [],
+        btns: [],
         height: '500',
         name: 'planListGrid',
       },
@@ -108,6 +109,7 @@ export default {
       deptList2: [],
       YAuiGrid: null,
       apprFlag: false,
+      tempAssessStepCd: '',
     };
   },
   watch: {
@@ -124,7 +126,6 @@ export default {
   },
   mounted() {
     this.YAuiGrid = this.$refs.yAuiGrid;
-    this.getList();
   },
   beforeDestroy() {},
   //* methods */
@@ -143,64 +144,9 @@ export default {
         });
       });
 
-      // 그리드 헤더 설정
-      this.gridOptions.header = [
-        // 평가팀
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004990'),
-          dataField: 'deptNm',
-          width: 300,
-        },
-        {
-          // 분류
-          headerText: this.$comm.getLangSpecInfoLabel('L0000001341'),
-          dataField: 'classificationNm',
-          width: 150,
-        },
-        {
-          // 관리번호
-          headerText: this.$comm.getLangSpecInfoLabel('L0000000590'),
-          dataField: 'jobManageNo',
-          width: 600,
-        },
-        {
-          // 공정
-          headerText: this.$comm.getLangSpecInfoLabel('L0000000515'),
-          dataField: 'processNm',
-          width: 200,
-        },
-
-        // 작업명
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000002389'),
-          dataField: 'jobNm',
-          width: 250,
-        },
-        // 평가년도
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000003065'),
-          dataField: 'year',
-          width: 150,
-        },
-        // 이전평가일
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000005834'),
-          dataField: 'assessDate',
-          width: 150,
-        },
-        // 평가담당자
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000004201'),
-          dataField: 'userNm',
-          width: 200,
-        },
-        // 이력번호
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000005835'),
-          dataField: 'revNo',
-          width: 120,
-        },
-      ];
+      this.setGridHeader().then(() => {
+        this.getList();
+      });
 
       // 그리드 버튼 설정
       this.gridOptions.btns = [
@@ -209,22 +155,90 @@ export default {
           title: this.$comm.getLangSpecInfoLabel('L0000002219'),
           color: 'orange',
           btnClicked: 'btnPopupInsertClicked2',
+          visible: true,
         },
         // 신규등록
         {
           title: this.$comm.getLangSpecInfoLabel('L0000001789'),
           color: 'orange',
           btnClicked: 'btnPopupInsertClicked',
+          visible: true,
         },
         // 삭제
         {
           title: this.$comm.getLangSpecInfoLabel('L0000001495'),
           color: 'red',
           btnClicked: 'deleteRow',
+          visible: true,
         },
       ];
     },
+    setGridHeader() {
+      return new Promise((resolve) => {
+        // 그리드 헤더 설정
 
+        // 그리드 헤더 설정
+        this.gridOptions.header = [
+          // 평가팀
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000004990'),
+            dataField: 'deptNm',
+            width: 300,
+          },
+          {
+            // 분류
+            headerText: this.$comm.getLangSpecInfoLabel('L0000001341'),
+            dataField: 'classificationNm',
+            width: 150,
+          },
+          {
+            // 관리번호
+            headerText: this.$comm.getLangSpecInfoLabel('L0000000590'),
+            dataField: 'jobManageNo',
+            width: 600,
+          },
+          {
+            // 공정
+            headerText: this.$comm.getLangSpecInfoLabel('L0000000515'),
+            dataField: 'processNm',
+            width: 200,
+          },
+
+          // 작업명
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000002389'),
+            dataField: 'jobNm',
+            width: 250,
+          },
+          // 평가년도
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000003065'),
+            dataField: 'year',
+            width: 150,
+          },
+          // 이전평가일
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000005834'),
+            dataField: 'assessDate',
+            width: 150,
+          },
+          // 평가담당자
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000004201'),
+            dataField: 'userNm',
+            width: 200,
+          },
+          // 이력번호
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000005835'),
+            dataField: 'revNo',
+            width: 120,
+          },
+        ];
+
+        resolve();
+      });
+    },
     getList() {
       if (!this.Planmgmt.assessPlanNo || this.Planmgmt.assessPlanNo === 0) {
         return;
@@ -236,6 +250,7 @@ export default {
           this.Planmgmt.planmgmtDeptList = _result.data.planmgmtDeptList;
 
           this.Planmgmt.assessStepCd = _result.data.assessStepCd;
+          this.tempAssessStepCd = _result.data.assessStepCd;
 
           this.gridOptions.data = this.Planmgmt.planmgmtDeptList;
           this.YAuiGrid.setGridData(this.Planmgmt.planmgmtDeptList);
@@ -246,8 +261,14 @@ export default {
           ) {
             // 결재중, 결재완료인 경우
             this.editable = false;
+            this.gridOptions.btns[0].visible = false;
+            this.gridOptions.btns[1].visible = false;
+            this.gridOptions.btns[2].visible = false;
           } else if (this.Planmgmt.apprRqstStatus === '진행') {
             this.editable = false;
+            this.gridOptions.btns[0].visible = false;
+            this.gridOptions.btns[1].visible = false;
+            this.gridOptions.btns[2].visible = false;
           }
         },
         (_error) => {

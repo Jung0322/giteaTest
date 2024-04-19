@@ -129,31 +129,36 @@
     <b-row class="mt-3">
       <b-col sm="12">
         <b-col sm="12" class="px-0">
-          <div slot="buttonGroup" class="float-right mb-1">
-            <!-- 계획등록 -->
-            <y-btn
+          <!-- <div slot="buttonGroup" class="float-right mb-1"> -->
+          <!-- 계획등록 -->
+          <!-- <y-btn
               v-if="editable"
               title="L0000000470"
               color="orange"
               @btnClicked="openPopup"
               @btnClickedErrorCallback="btnClickedErrorCallback"
-            />
-            <!-- 검색 -->
-            <y-btn title="L0000000327" color="green" @btnClicked="getList" />
-          </div>
+            /> -->
+          <!-- 검색 -->
+          <!-- <y-btn title="L0000000327" color="green" @btnClicked="getList" />
+          </div> -->
           <!-- 평가계획 목록 -->
-          <y-data-table
-            ref="dataTable"
-            :height="gridOptions.height"
+          <y-auigrid
+            ref="yAuiGrid"
+            :name="gridOptions.name"
             :headers="gridOptions.header"
-            :items="gridOptions.data"
-            :print="true"
-            :use-paging="true"
-            @tableLinkClicked="tableLinkAccidentTitleClicked"
-            :cellClassName="tableCellClassName"
-            label="L0000003053"
-          >
-          </y-data-table>
+            :btns="gridOptions.btns"
+            :height="gridOptions.height"
+            :label="this.$comm.getLangSpecInfoLabel('L0000003053')"
+            :useExcelExport="false"
+            :enableCellMerge="true"
+            :enableSorting="true"
+            :showGridSetSave="true"
+            :useContextMenu="true"
+            :enableRightDownFocus="true"
+            :showGridCtrl="true"
+            @openPopup="openPopup"
+            @getList="getList"
+          />
         </b-col>
       </b-col>
     </b-row>
@@ -214,15 +219,19 @@ export default {
     assessStepCdItems: [], // 단계, 상태
     riskStepItems: [],
     deptCdList: [],
+    YAuiGrid: null,
   }),
   //* Vue lifecycle: created, mounted, destroyed, etc */
   beforeCreate() {},
   created() {},
   beforeMount() {
     Object.assign(this.$data, this.$options.data());
+    this.init();
+    window.addEventListener('resize', this.resizeGrid);
   },
   mounted() {
-    this.init();
+    this.YAuiGrid = this.$refs.yAuiGrid;
+    this.resizeGrid();
   },
   beforeDestroy() {},
   //* methods */
@@ -296,75 +305,87 @@ export default {
       }
       this.searchParam.riskTypeCd = 'RWRS1'; // 계획
       // 그리드 헤더 설정
+
       this.gridOptions.header = [
-        // 사업장
         {
-          text: 'L0000001415',
-          name: 'plantNm',
-          width: '120px',
-          align: 'center',
-        },
-        // 평가기법
+          headerText: this.$comm.getLangSpecInfoLabel('L0000001415'),
+          dataField: 'plantNm',
+          width: 120,
+        } /* 사업장 */,
         {
-          text: 'L0000003416',
-          name: 'assessTypeNm',
-          width: '100px',
-          align: 'center',
-        },
-        // 평가명
+          headerText: this.$comm.getLangSpecInfoLabel('L0000003416'),
+          dataField: 'assessTypeNm',
+          width: 100,
+        } /* 평가기법 */,
         {
-          text: 'L0000003081',
-          name: 'assessNm',
-          width: '200px',
-          align: 'center',
-          url: true,
-        },
-        // 구분
+          headerText: this.$comm.getLangSpecInfoLabel('L0000003081'),
+          dataField: 'assessNm',
+          width: 650,
+          renderer: {
+            type: 'LinkRenderer',
+            baseUrl: 'javascript',
+            jsCallback: (rowIndex, columnIndex, value, item) => {
+              this.openPopup(item);
+            },
+          },
+        } /* 평가명 */,
         {
-          text: 'L0000000686',
-          name: 'regRegdemNm',
-          width: '120px',
-          align: 'center',
-        },
-        // 주관팀
+          headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
+          dataField: 'regRegdemNm',
+          width: 100,
+        } /* 구분 */,
         {
-          text: 'L0000002713',
-          name: 'mainDeptNm',
-          width: '180px',
-          align: 'center',
-        },
-        // 대상년도
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002713'),
+          dataField: 'mainDeptNm',
+          width: 120,
+        } /* 주관팀 */,
         {
-          text: 'L0000004449',
-          name: 'assessYear',
-          width: '100px',
-          align: 'center',
-        },
-        // 단계(상태)
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004449'),
+          dataField: 'assessYear',
+          width: 200,
+        } /* 대상년도 */,
         {
-          text: 'L0000004972',
-          name: 'stateNm',
-          width: '120px',
-          align: 'center',
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004972'),
+          dataField: 'stateNm',
+          width: 120,
+        } /* 단계(상태) */,
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002355'),
+          dataField: 'createUserNm',
+          width: 110,
+        } /* 작성자 */,
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002352'),
+          dataField: 'createDt',
+          width: 200,
+        } /* 작성일 */,
+      ];
+      // 그리드 버튼 설정
+      this.gridOptions.btns = [
+        // 계획등록
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000000470'),
+          color: 'orange',
+          btnClicked: 'openPopup',
         },
 
-        // 작성자
+        // 검색
         {
-          text: 'L0000002355',
-          name: 'createUserNm',
-          width: '110px',
-          align: 'center',
-        },
-        // 작성일
-        {
-          text: 'L0000002352',
-          name: 'createDt',
-          width: '120px',
-          align: 'center',
+          title: this.$comm.getLangSpecInfoLabel('L0000000327'),
+          color: 'green',
+          btnClicked: 'getList',
         },
       ];
 
       this.getList(); // 평가계획 목록 조회
+    },
+    resizeGrid() {
+      let _height = window.innerHeight - 385;
+      if (window.innerHeight < 500) {
+        _height = 250;
+      }
+
+      this.YAuiGrid.resize(null, _height);
     },
     selectCheck() {
       return true;
@@ -499,28 +520,7 @@ export default {
       this.$http.param = this.searchParam;
       this.$http.request(
         (_result) => {
-          this.gridOptions.data = this.$_.clone(_result.data);
-          // 기존 소스 주석 처리
-          // if (this.companyEditable) {
-          // 전사권한 : 전체 건
-          //   this.gridOptions.data = this.$_.clone(_result.data);
-          // } else if (this.plantEditable) {
-          // 사업장권한 : 내 사업장 등록 건
-          //   this.gridOptions.data = this.$_.clone(
-          //     _result.data.filter(
-          //       (v) => v.plantCd === this.$store.getters.plantCd
-          //     )
-          //   );
-          // } else if (this.deptEditable) {
-          // 일반권한 : 내 부서 등록 건 + 타 부서 평가완료 건
-          //   this.gridOptions.data = this.$_.clone(
-          //     _result.data.filter(
-          //       (v) =>
-          //         v.deptCd === this.$store.getters.deptCd ||
-          //         v.stepCd === 'BAPSG'
-          //     )
-          //   );
-          // }
+          this.YAuiGrid.setGridData(_result.data);
 
           this.$comm.pushCookie(this.searchParam);
           setTimeout(() => {

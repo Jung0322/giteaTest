@@ -211,13 +211,7 @@ export default {
           this.teamTypeItems = _result;
         });
       this.deleteUrl = transactionConfig.rsa.planmgmtdeptlist2.delete.url;
-      this.detailUrl = selectConfig.rsa.planmgmt2.get2.url;
-
-      this.setGridHeader().then(() => {
-        this.getList();
-      });
-
-      this.getUserGrpList();
+      this.detailUrl = selectConfig.rsa.planmgmt2.getResult.url;
       // 그리드 버튼 설정
       this.gridOptions1.btns = [
         // 추가
@@ -253,6 +247,11 @@ export default {
           visible: true,
         },
       ];
+      this.setGridHeader().then(() => {
+        this.getList();
+      });
+
+      this.getUserGrpList();
     },
     getUserGrp() {
       this.$http.url = this.$format(this.getUrl, this.eduGrpNo);
@@ -368,7 +367,6 @@ export default {
                 headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
                 dataField: 'teamType',
                 width: 130,
-
                 renderer: {
                   type: 'DropDownListRenderer',
                   listFunction: () => {
@@ -376,9 +374,6 @@ export default {
                   },
                   keyField: 'code', // key 에 해당되는 필드명
                   valueField: 'codeNm', // value 에 해당되는 필드명
-                  disabledFunction: () => {
-                    return !this.apprMode;
-                  },
                 },
               },
               {
@@ -409,7 +404,6 @@ export default {
                 dataField: 'remarks',
                 width: 400,
                 type: 'text',
-                editable: this.apprMode,
               },
             ];
           });
@@ -421,7 +415,6 @@ export default {
             dataField: 'raterNm',
             width: 130,
             type: 'text',
-            editable: this.apprMode,
           },
           {
             // 소속
@@ -429,7 +422,6 @@ export default {
             dataField: 'deptNm',
             width: 130,
             type: 'text',
-            editable: this.apprMode,
           },
           {
             // 직책
@@ -437,7 +429,6 @@ export default {
             dataField: 'positionNm',
             width: 130,
             type: 'text',
-            editable: this.apprMode,
           },
           {
             // 비고
@@ -445,12 +436,9 @@ export default {
             dataField: 'remarks',
             width: 530,
             type: 'text',
-            editable: this.apprMode,
           },
         ];
-        console.log('ed', this.editable);
-        console.log('appr', this.apprMode);
-        console.log('upd', this.updateMode);
+
         resolve();
       });
     },
@@ -619,11 +607,11 @@ export default {
     },
 
     getList() {
-      if (!this.Planmgmt.assessPlanNo || this.Planmgmt.assessPlanNo === 0) {
+      if (!this.Planmgmt.assessRsltNo || this.Planmgmt.assessRsltNo === 0) {
         return;
       }
 
-      this.$http.url = this.$format(this.detailUrl, this.Planmgmt.assessPlanNo);
+      this.$http.url = this.$format(this.detailUrl, this.Planmgmt.assessRsltNo);
       this.$http.type = 'GET';
 
       this.$http.request(
@@ -667,12 +655,11 @@ export default {
           }
 
           if (
-            this.Planmgmt.assessStepCd === 'STATE4' ||
-            this.Planmgmt.assessStepCd === 'STATE3'
+            this.Planmgmt.assessStepCd === 'RRS02' ||
+            this.Planmgmt.assessStepCd === 'RRS03'
           ) {
             // 결재중, 결재완료인 경우
             this.editable = false;
-
             this.gridOptions1.btns[0].visible = false;
             this.gridOptions1.btns[1].visible = false;
             this.gridOptions2.btns[0].visible = false;

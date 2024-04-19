@@ -1748,6 +1748,9 @@ let transactionConfig = {
       insert2: {
         url: '/api/rsa/planmgmt2/planmgmt2',
       },
+      insertNoPlanResult: {
+        url: '/api/rsa/planmgmt2/lsPlanmgmtResult',
+      },
       insertAssessJob: {
         url: '/api/rsa/planmgmt2/createAssessJob',
       },
@@ -1762,6 +1765,9 @@ let transactionConfig = {
       },
       edit3: {
         url: '/api/rsa/planmgmt2/updateRiskAssessResult',
+      },
+      editNoPlanResult: {
+        url: '/api/rsa/planmgmt2/updatelsPlanmgmtResult',
       },
       appr: {
         url: '/api/rsa/planmgmt2/apprCompleteRiskAssessPlan',

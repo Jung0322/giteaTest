@@ -129,18 +129,18 @@
     <b-row class="mt-3">
       <b-col sm="12">
         <b-col sm="12" class="px-0">
-          <div slot="buttonGroup" class="float-right mb-1">
-            <!-- 무계획 결과 등록 -->
-            <y-btn
+          <!-- <div slot="buttonGroup" class="float-right mb-1"> -->
+          <!-- 무계획 결과 등록 -->
+          <!-- <y-btn
               v-if="editable"
               title="L0000004982"
               color="orange"
               @btnClicked="openPopup2"
               @btnClickedErrorCallback="btnClickedErrorCallback"
             />
-          </div>
+          </div> -->
           <!-- 평가결과 관리 목록 -->
-          <y-data-table
+          <!-- <y-data-table
             ref="dataTable"
             :height="gridOptions.height"
             :headers="gridOptions.header"
@@ -151,7 +151,24 @@
             :cellClassName="tableCellClassName"
             label="L0000004981"
           >
-          </y-data-table>
+          </y-data-table> -->
+          <y-auigrid
+            ref="yAuiGrid"
+            :name="gridOptions.name"
+            :headers="gridOptions.header"
+            :btns="gridOptions.btns"
+            :height="gridOptions.height"
+            :label="this.$comm.getLangSpecInfoLabel('L0000004981')"
+            :useExcelExport="false"
+            :enableCellMerge="true"
+            :enableSorting="true"
+            :showGridSetSave="true"
+            :useContextMenu="true"
+            :enableRightDownFocus="true"
+            :showGridCtrl="true"
+            @openPopup2="openPopup2"
+            @getList="getList"
+          />
         </b-col>
       </b-col>
     </b-row>
@@ -211,15 +228,19 @@ export default {
     assessStepCdItems: [], // 단계, 상태
     riskStepItems: [],
     deptCdList: [],
+    YAuiGrid: null,
   }),
   //* Vue lifecycle: created, mounted, destroyed, etc */
   beforeCreate() {},
   created() {},
   beforeMount() {
     Object.assign(this.$data, this.$options.data());
+    this.init();
+    window.addEventListener('resize', this.resizeGrid);
   },
   mounted() {
-    this.init();
+    this.YAuiGrid = this.$refs.yAuiGrid;
+    this.resizeGrid();
   },
   beforeDestroy() {},
   //* methods */
@@ -295,89 +316,92 @@ export default {
 
       // 그리드 헤더 설정
       this.gridOptions.header = [
-        // 주관팀
         {
-          text: 'L0000002713',
-          name: 'mainDeptNm',
-          width: '150px',
-          align: 'center',
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002713'),
+          dataField: 'mainDeptNm',
+          width: 100,
+        }, // 주관팀
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000003416'),
+          dataField: 'assessTypeNm',
+          width: 100,
+        }, // 평가기법
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000003081'),
+          dataField: 'assessNm',
+          width: 300,
+          renderer: {
+            type: 'LinkRenderer',
+            baseUrl: 'javascript',
+            jsCallback: (rowIndex, columnIndex, value, item) => {
+              this.openPopup(item);
+            },
+          },
+        }, // 평가명
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
+          dataField: 'regRegdemNm',
+          width: 80,
+        }, // 구분
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000000927'),
+          dataField: 'deptNm',
+          width: 120,
+        }, // 대상부서
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004449'),
+          dataField: 'assessYear',
+          width: 120,
+        }, // 대상년도
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004980'),
+          dataField: 'assessFinishDt',
+          width: 120,
+        }, // 평가완료일
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000004972'),
+          dataField: 'stateNm',
+          width: 120,
+        }, // 단계(상태)
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002355'),
+          dataField: 'createUserNm',
+          width: 120,
+        }, // 작성자
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000002352'),
+          dataField: 'createDt',
+          width: 120,
+        }, // 작성일
+        {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000001415'),
+          dataField: 'plantNm',
+          width: 120,
+        }, // 사업장
+      ];
+      this.gridOptions.btns = [
+        // 무계획 결과등록
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000004982'),
+          color: 'orange',
+          btnClicked: 'openPopup2',
         },
-
-        // 평가기법
+        // 검색
         {
-          text: 'L0000003416',
-          name: 'assessTypeNm',
-          width: '100px',
-          align: 'center',
-        },
-        // 평가명
-        {
-          text: 'L0000003081',
-          name: 'assessNm',
-          width: '200px',
-          align: 'center',
-          url: true,
-        },
-        // 구분
-        {
-          text: 'L0000000686',
-          name: 'regRegdemNm',
-          width: '80px',
-          align: 'center',
-        },
-        // 대상부서
-        {
-          text: 'L0000000927',
-          name: 'deptNm',
-          width: '120px',
-          align: 'center',
-        },
-        // 대상년도
-        {
-          text: 'L0000004449',
-          name: 'assessYear',
-          width: '90px',
-          align: 'center',
-        },
-        // 평가완료일
-        {
-          text: 'L0000004980',
-          name: 'assessFinishDt',
-          width: '120px',
-          align: 'center',
-        },
-        // 단계(상태)
-        {
-          text: 'L0000004972',
-          name: 'stateNm',
-          width: '180px',
-          align: 'center',
-        },
-        // 작성자
-        {
-          text: 'L0000002355',
-          name: 'createUserNm',
-          width: '120px',
-          align: 'center',
-        },
-
-        // 작성일
-        {
-          text: 'L0000002352',
-          name: 'createDt',
-          width: '120px',
-          align: 'center',
-        },
-        // 사업장
-        {
-          text: 'L0000001415',
-          name: 'plantNm',
-          width: '100px',
-          align: 'center',
+          title: this.$comm.getLangSpecInfoLabel('L0000000327'),
+          color: 'green',
+          btnClicked: 'getList',
         },
       ];
-
       this.getList(); // 평가계획 목록 조회
+    },
+    resizeGrid() {
+      let _height = window.innerHeight - 385;
+      if (window.innerHeight < 500) {
+        _height = 250;
+      }
+
+      this.YAuiGrid.resize(null, _height);
     },
     searchDept() {
       this.popupOptions.target = () =>
@@ -508,8 +532,6 @@ export default {
     },
     /** 위험성 평가계획 수립 목록 검색 **/
     getList() {
-      // this.searchParam.yearChk =
-      //   this.searchParam.yearChk === '' ? 'N' : this.searchParam.yearChk;
       this.$http.url = this.searchUrl;
       this.$http.type = 'GET';
       if (!this.searchParam.deptCd) {
@@ -525,28 +547,7 @@ export default {
 
       this.$http.request(
         (_result) => {
-          this.gridOptions.data = this.$_.clone(_result.data);
-          // 기존 소스 주석 처리
-          // if (this.companyEditable) {
-          //   // 전사권한 : 전체 건
-          //   this.gridOptions.data = this.$_.clone(_result.data);
-          // } else if (this.plantEditable) {
-          // 사업장권한 : 내 사업장 등록 건
-          //   this.gridOptions.data = this.$_.clone(
-          //     _result.data.filter(
-          //       (v) => v.plantCd === this.$store.getters.plantCd
-          //     )
-          //   );
-          // } else if (this.deptEditable) {
-          // 일반권한 : 내 부서 등록 건 + 타 부서 평가완료 건
-          //   this.gridOptions.data = this.$_.clone(
-          //     _result.data.filter(
-          //       (v) =>
-          //         v.deptCd === this.$store.getters.deptCd ||
-          //         v.stepCd === 'BAPSG'
-          //     )
-          //   );
-          // }
+          this.YAuiGrid.setGridData(_result.data);
 
           this.$comm.pushCookie(this.searchParam);
           setTimeout(() => {

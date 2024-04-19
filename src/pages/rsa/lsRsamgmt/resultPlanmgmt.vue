@@ -688,6 +688,7 @@ export default {
       this.popupOptions.closeCallback = this.closePopup;
     },
     openPopup(data) {
+      console.log('data: ', data);
       this.popupOptions.target = () =>
         import(`${'./planmgmtResultDetail.vue'}`);
       this.popupOptions.width = '90%';

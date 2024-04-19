@@ -140,11 +140,13 @@ export default {
       gridOptions1: {
         header: [],
         data: [],
+        btns: [],
         height: '500',
       },
       gridOptions2: {
         header: [],
         data: [],
+        btns: [],
         height: '500',
       },
       editable: true,
@@ -210,9 +212,44 @@ export default {
         });
       this.deleteUrl = transactionConfig.rsa.planmgmtdeptlist2.delete.url;
       this.detailUrl = selectConfig.rsa.planmgmt2.get2.url;
+      // 그리드 버튼 설정
+      this.gridOptions1.btns = [
+        // 추가
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000002892'),
+          color: 'orange',
+          btnClicked: 'addRow1',
+          visible: true,
+        },
 
-      this.setHeader();
-      this.getList();
+        // 삭제
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000001495'),
+          color: 'red',
+          btnClicked: 'deleteRow1',
+          visible: true,
+        },
+      ];
+      this.gridOptions2.btns = [
+        // 추가
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000002892'),
+          color: 'orange',
+          btnClicked: 'addRow2',
+          visible: true,
+        },
+
+        // 삭제
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000001495'),
+          color: 'red',
+          btnClicked: 'deleteRow2',
+          visible: true,
+        },
+      ];
+      this.setGridHeader().then(() => {
+        this.getList();
+      });
 
       this.getUserGrpList();
     },
@@ -316,126 +353,96 @@ export default {
         });
       }
     },
-    setHeader() {
-      this.$comm
-        .getComboItems('RSA_ASSESS_TEAM_TYPE', false)
-        .then((_result) => {
-          this.teamTypeItems = _result;
+    setGridHeader() {
+      return new Promise((resolve) => {
+        this.$comm
+          .getComboItems('RSA_ASSESS_TEAM_TYPE', false)
+          .then((_result) => {
+            this.teamTypeItems = _result;
 
-          // 그리드 헤더 설정
-          this.gridOptions1.header = [
-            // 구분
-            {
-              headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
-              dataField: 'teamType',
-              width: 130,
-              renderer: {
-                type: 'DropDownListRenderer',
-                listFunction: () => {
-                  return this.teamTypeItems;
-                },
-                keyField: 'code', // key 에 해당되는 필드명
-                valueField: 'codeNm', // value 에 해당되는 필드명
-                disabledFunction: () => {
-                  return !this.editable && this.apprMode;
+            // 그리드 헤더 설정
+            this.gridOptions1.header = [
+              // 구분
+              {
+                headerText: this.$comm.getLangSpecInfoLabel('L0000000686'),
+                dataField: 'teamType',
+                width: 130,
+                renderer: {
+                  type: 'DropDownListRenderer',
+                  listFunction: () => {
+                    return this.teamTypeItems;
+                  },
+                  keyField: 'code', // key 에 해당되는 필드명
+                  valueField: 'codeNm', // value 에 해당되는 필드명
                 },
               },
-            },
-            {
-              // 소속
-              headerText: this.$comm.getLangSpecInfoLabel('L0000001662'),
-              dataField: 'deptNm',
-              width: 130,
-              editable: false,
-            },
-            {
-              // 직책
-              headerText: this.$comm.getLangSpecInfoLabel('L0000002772'),
-              dataField: 'positionNm',
-              width: 130,
-              editable: false,
-            },
-            // 성명
-            {
-              headerText: this.$comm.getLangSpecInfoLabel('L0000001630'),
-              dataField: 'raterNm',
-              width: 130,
-              editable: false,
-            },
+              {
+                // 소속
+                headerText: this.$comm.getLangSpecInfoLabel('L0000001662'),
+                dataField: 'deptNm',
+                width: 130,
+                editable: false,
+              },
+              {
+                // 직책
+                headerText: this.$comm.getLangSpecInfoLabel('L0000002772'),
+                dataField: 'positionNm',
+                width: 130,
+                editable: false,
+              },
+              // 성명
+              {
+                headerText: this.$comm.getLangSpecInfoLabel('L0000001630'),
+                dataField: 'raterNm',
+                width: 130,
+                editable: false,
+              },
 
-            {
-              // 비고
-              headerText: this.$comm.getLangSpecInfoLabel('L0000001360'),
-              dataField: 'remarks',
-              width: 400,
-              type: 'text',
-            },
-          ];
-        });
+              {
+                // 비고
+                headerText: this.$comm.getLangSpecInfoLabel('L0000001360'),
+                dataField: 'remarks',
+                width: 400,
+                type: 'text',
+              },
+            ];
+          });
 
-      this.gridOptions2.header = [
-        // 성명
-        {
-          headerText: this.$comm.getLangSpecInfoLabel('L0000001630'),
-          dataField: 'raterNm',
-          width: 130,
-          type: 'text',
-        },
-        {
-          // 소속
-          headerText: this.$comm.getLangSpecInfoLabel('L0000001662'),
-          dataField: 'deptNm',
-          width: 130,
-          type: 'text',
-        },
-        {
-          // 직책
-          headerText: this.$comm.getLangSpecInfoLabel('L0000002772'),
-          dataField: 'positionNm',
-          width: 130,
-          type: 'text',
-        },
-        {
-          // 비고
-          headerText: this.$comm.getLangSpecInfoLabel('L0000001360'),
-          dataField: 'remarks',
-          width: 530,
-          type: 'text',
-        },
-      ];
+        this.gridOptions2.header = [
+          // 성명
+          {
+            headerText: this.$comm.getLangSpecInfoLabel('L0000001630'),
+            dataField: 'raterNm',
+            width: 130,
+            type: 'text',
+          },
+          {
+            // 소속
+            headerText: this.$comm.getLangSpecInfoLabel('L0000001662'),
+            dataField: 'deptNm',
+            width: 130,
+            type: 'text',
+          },
+          {
+            // 직책
+            headerText: this.$comm.getLangSpecInfoLabel('L0000002772'),
+            dataField: 'positionNm',
+            width: 130,
+            type: 'text',
+          },
+          {
+            // 비고
+            headerText: this.$comm.getLangSpecInfoLabel('L0000001360'),
+            dataField: 'remarks',
+            width: 530,
+            type: 'text',
+          },
+        ];
 
-      // 그리드 버튼 설정
-      this.gridOptions1.btns = [
-        // 추가
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000002892'),
-          color: 'orange',
-          btnClicked: 'addRow1',
-        },
-
-        // 삭제
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000001495'),
-          color: 'red',
-          btnClicked: 'deleteRow1',
-        },
-      ];
-      this.gridOptions2.btns = [
-        // 추가
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000002892'),
-          color: 'orange',
-          btnClicked: 'addRow2',
-        },
-
-        // 삭제
-        {
-          title: this.$comm.getLangSpecInfoLabel('L0000001495'),
-          color: 'red',
-          btnClicked: 'deleteRow2',
-        },
-      ];
+        resolve();
+      });
     },
+
     getUserGrpList() {
       this.$http.url = selectConfig.saf.education.eduGroup.list.url;
       this.$http.type = 'GET';
@@ -609,7 +616,6 @@ export default {
 
       this.$http.request(
         (_result) => {
-          console.log('_result: ', _result);
           this.Planmgmt.internalList = _result.data.internalList;
           this.Planmgmt.assessLeaderId = _result.data.assessLeaderId;
           this.Planmgmt.assessLeaderNm = _result.data.assessLeaderNm;
@@ -643,22 +649,27 @@ export default {
 
             this.gridOptions1.data = this.Planmgmt.internalList;
             this.gridOptions2.data = this.Planmgmt.externalList;
-            console.log(
-              'this.Planmgmt.internalList: ',
-              this.Planmgmt.internalList
-            );
+
             this.YAuiGrid1.setGridData(this.Planmgmt.internalList);
             this.YAuiGrid2.setGridData(this.Planmgmt.externalList);
           }
 
           if (
-            this.Planmgmt.assessStepCd === 'STATE4' ||
-            this.Planmgmt.assessStepCd === 'STATE3'
+            this.Planmgmt.assessStepCd === 'RRS02' ||
+            this.Planmgmt.assessStepCd === 'RRS03'
           ) {
             // 결재중, 결재완료인 경우
             this.editable = false;
+            this.gridOptions1.btns[0].visible = false;
+            this.gridOptions1.btns[1].visible = false;
+            this.gridOptions2.btns[0].visible = false;
+            this.gridOptions2.btns[1].visible = false;
           } else if (this.Planmgmt.apprRqstStatus === '진행') {
             this.editable = false;
+            this.gridOptions1.btns[0].visible = false;
+            this.gridOptions1.btns[1].visible = false;
+            this.gridOptions2.btns[0].visible = false;
+            this.gridOptions2.btns[1].visible = false;
           }
         },
         (_error) => {

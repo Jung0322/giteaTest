@@ -11,11 +11,6 @@
     <b-row class="mt-3">
       <b-col sm="12">
         <b-col sm="12" class="px-0">
-          <div slot="buttonGroup" class="float-right mb-1">
-            <!-- 닫기 -->
-            <y-btn title="L0000000881" @btnClicked="closePopup('CLOSE')" />
-          </div>
-
           <!-- <y-data-table
             ref="dataTable"
             :height="gridOptions.height"

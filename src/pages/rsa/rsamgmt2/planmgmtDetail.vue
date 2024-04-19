@@ -205,7 +205,7 @@
             <component
               :is="component"
               v-if="component"
-              :Planmgmt.sync="Planmgmt"
+              :Planmgmt.sync="this.Planmgmt"
               :deptListLoad.sync="deptListLoad"
               :updateMode.sync="updateMode"
               :editable.sync="editable"
@@ -573,12 +573,15 @@ export default {
           ) {
             // 결재중, 결재완료인 경우
             this.editable = false;
+            this.apprMode = false;
           } else if (this.Planmgmt.apprRqstStatus === '진행') {
             this.editable = false;
+            this.apprMode = false;
           } else if (this.Planmgmt.apprRqstStatus === '완료') {
             this.editable = false;
             this.disabled = true;
             this.updateMode = false;
+            this.apprMode = false;
           }
           if (this.popupParam.apprFlag) {
             this.editable = false;

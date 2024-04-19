@@ -144,7 +144,6 @@
               title="L0000000881"
               @btnClicked="closeRevPopup"
             />
-            <y-btn title="L0000000327" color="green" @btnClicked="getList" />
           </div>
 
           <!-- 위험성평가 결과 목록 -->

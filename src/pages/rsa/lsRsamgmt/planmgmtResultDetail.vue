@@ -36,7 +36,7 @@
 
               <!-- 저장 -->
               <y-btn
-                v-if="updateMode && editable && apprMode"
+                v-if="updateMode && editable"
                 :action-url="editUrl"
                 :param="Planmgmt"
                 :is-submit="isEdit"
@@ -73,98 +73,28 @@
         </b-row>
         <b-card>
           <b-row>
-            <!-- 평가명 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000003081"
-                name="assessNm"
-                v-model="Planmgmt.assessNm"
-              ></y-text>
-            </b-col>
-            <!-- 평가팀 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000004990"
-                name="deptNm"
-                v-model="Planmgmt.deptNm"
-              ></y-text>
-            </b-col>
-            <!-- 분류 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000001341"
-                name="classificationNm"
-                v-model="Planmgmt.classificationNm"
-              ></y-text>
-            </b-col>
-            <!-- 관리번호 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000000590"
-                name="jobManageNo"
-                v-model="Planmgmt.jobManageNo"
-              ></y-text>
-            </b-col>
-            <!-- 평가구분 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000003059"
-                name="regRegdemNm"
-                v-model="Planmgmt.regRegdemNm"
-              ></y-text>
-            </b-col>
-            <!-- 공정 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
-              <y-text
-                :editable="false"
-                :width="10"
-                :maxlength="50"
-                ui="bootstrap"
-                label="L0000000515"
-                name="processNm"
-                v-model="Planmgmt.processNm"
-              ></y-text>
-            </b-col>
-
             <!-- 작업명 -->
 
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
+            <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
               <y-text
-                :editable="false"
-                :width="10"
+                :editable="editable && apprMode"
+                :width="8"
                 :maxlength="50"
                 ui="bootstrap"
                 label="L0000002389"
                 name="jobNm"
                 v-model="Planmgmt.jobNm"
+                :required="true"
+                v-validate="'required'"
+                :state="validateState('jobNm')"
               ></y-text>
             </b-col>
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3"> </b-col>
+
             <!-- 평가일 -->
-            <b-col sm="4" md="4" lg="4" xl="4" class="col-xxl-3">
+            <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
               <y-datepicker
                 :editable="editable && apprMode"
-                :width="10"
+                :width="8"
                 name="assessDate"
                 label="L0000003091"
                 :default="Planmgmt.assessDate"
@@ -174,7 +104,27 @@
                 :state="validateState('assessDate')"
               />
             </b-col>
-
+            <!-- 담당자 -->
+            <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
+              <y-text
+                :width="8"
+                :clearable="true"
+                :disabled="true"
+                ui="bootstrap"
+                label="L0000004201"
+                name="userNm"
+                v-model="Planmgmt.userNm"
+                :appendIcon="[
+                  { icon: 'times', callbackName: 'clear' },
+                  { icon: 'search', callbackName: 'searchUser' },
+                ]"
+                @searchUser="btnSearchUserClicked"
+                @clear="clear()"
+                :required="true"
+                v-validate="'required'"
+                :state="validateState('userNm')"
+              />
+            </b-col>
             <!-- 기타 안전사항 -->
             <b-col sm="12" md="12" lg="12" xl="12" class="col-xxl-6">
               <y-textarea
@@ -285,8 +235,7 @@ export default {
       assessLeaderNm: '', // 평가리더명
       planmgmtDeptList: [],
       deptList: [], // 분류목록
-      tempAssessYear: '', // 임시저장용 평가년도
-      tempAssessYear2: '', // 임시저장용 평가년도 (백엔드용)
+
       tempAssessNm: '', // 임시저장용 평가명
       revNo: 0, // 관리번호
       assessDate: '', // 평가일
@@ -373,31 +322,26 @@ export default {
       this.detailUrl = selectConfig.rsa.planmgmt2.getResult.url;
       this.classificationUrl =
         selectConfig.rsa.planmgmt2.getClassificationList.url;
-      this.editUrl = transactionConfig.rsa.planmgmt2.edit3.url;
+      this.editUrl = transactionConfig.rsa.planmgmt2.editNoPlanResult.url;
       this.completUrl = transactionConfig.rsa.planmgmt2.completeResult.url;
       this.apprUrl = transactionConfig.rsa.planmgmt2.apprResult.url;
-      this.insertUrl = transactionConfig.rsa.planmgmt2.insert2.url;
+      this.insertUrl = transactionConfig.rsa.planmgmt2.insertNoPlanResult.url;
       this.deleteUrl = transactionConfig.rsa.planmgmt2.deleteRslt.url;
 
       this.$comm.getComboItems('RSA_REG_REGDEM', false).then((_result) => {
         this.rsaRegRegdemItems = _result || [];
       });
+      this.$comm.getComboItems('RSA_ASSESS_CLASS', true).then((_result) => {
+        this.deptList = _result;
+        this.deptList.splice(0, 1, {
+          code: null,
+          codeNm:
+            this.$comm.getLangSpecInfoLabel('L0000003394') /* 선택하세요 */,
+        });
+      });
 
       this.getClassificationList();
       if (!this.popupParam.assessRsltNo) {
-        let from = this.$comm.getCalculatedDate(
-          this.$comm.getToday(),
-          '-6m',
-          'YYYY-MM-DD',
-          'YYYY-MM-DD'
-        );
-        let to = this.$comm.getCalculatedDate(
-          this.$comm.getToday(),
-          '0y',
-          'YYYY-MM-DD',
-          'YYYY-MM-DD'
-        );
-        this.Planmgmt.tempAssessYear = [from, to];
         this.Planmgmt.riskType = this.popupParam.riskType;
         this.Planmgmt.deptCd = this.$store.getters.deptCd;
         this.Planmgmt.assessDate = this.$comm.getToday();
@@ -409,6 +353,9 @@ export default {
       }
 
       this.setAttachFileGrps();
+    },
+    setDeptNm(deptNm) {
+      this.Planmgmt.deptNm = deptNm;
     },
     loadComponent() {
       var path = this.tabItems[this.tabIndex].url;
@@ -519,7 +466,7 @@ export default {
             confirmCallback: () => {
               this.nextUpdateFlag = true;
               this.nextInsertFlag = true;
-              this.Planmgmt.tempAssessYear = 0;
+
               this.Planmgmt.updateUserId = this.$store.getters.token;
               this.Planmgmt.updateDeptNm = this.$store.getters.deptNm;
               this.Planmgmt.updateDeptCd = this.$store.getters.deptCd;
@@ -570,10 +517,6 @@ export default {
             this.Planmgmt.assessDate = this.$comm.getToday();
           }
 
-          this.Planmgmt.tempAssessYear = [
-            this.Planmgmt.assessStartDate,
-            this.Planmgmt.assessEndDate,
-          ];
           this.Planmgmt.planmgmtDeptList = _result.data.planmgmtDeptList;
           this.Planmgmt.internalList = _result.data.internalList;
 
@@ -685,11 +628,28 @@ export default {
         freqFlag = false;
         return;
       }
+      if (!this.Planmgmt.jobNm) {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395' /* 안내 */,
+          message: 'M0000001323' /* 작업명을 입력해주세요. */,
+          type: 'warning', // success / info / warning / error
+        });
 
+        return;
+      }
       if (!this.Planmgmt.assessDate) {
         window.getApp.$emit('ALERT', {
           title: 'L0000003395' /* 안내 */,
           message: 'L0000005141' /* 평가일을 입력해주세요. */,
+          type: 'warning', // success / info / warning / error
+        });
+
+        return;
+      }
+      if (!this.Planmgmt.userNm) {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395' /* 안내 */,
+          message: 'M0000000644' /* 담당자를 입력하세요. */,
           type: 'warning', // success / info / warning / error
         });
 
@@ -812,29 +772,21 @@ export default {
         },
       });
     },
-    setDeptNm(deptNm) {
-      this.Planmgmt.deptNm = deptNm;
-    },
 
     nextInsert() {
+      console.log('this.Planmgmt: ', this.Planmgmt);
       this.$validator
         .validateAll()
         .then((_result) => {
           if (_result) {
             window.getApp.$emit('CONFIRM', {
               title: 'L0000003321',
-              message: 'L0000005897', // 평가계획을 등록하시겠습니까?
+              message: 'M0000000636', // 평가결과를 등록하시겠습니까?
               type: 'info',
               confirmCallback: () => {
                 this.nextInsertFlag = true;
-                this.Planmgmt.assessStartDate = this.Planmgmt.tempAssessYear[0];
-                this.Planmgmt.assessEndDate = this.Planmgmt.tempAssessYear[1];
-                this.Planmgmt.assessYear =
-                  this.Planmgmt.tempAssessYear[0].substring(0, 4);
-                this.Planmgmt.tempAssessYear =
-                  this.Planmgmt.tempAssessYear[0].substring(0, 4);
                 this.Planmgmt.createUserId = this.$store.getters.token;
-                this.Planmgmt.userId = this.$store.getters.token;
+
                 this.Planmgmt.createDeptNm = this.$store.getters.deptNm;
                 this.Planmgmt.createDeptCd = this.$store.getters.deptCd;
                 this.Planmgmt.createPositionCd = this.$store.getters.positionCd;
@@ -899,7 +851,7 @@ export default {
                 confirmCallback: () => {
                   this.nextUpdateFlag = true;
                   this.nextInsertFlag = true;
-                  this.Planmgmt.tempAssessYear = 0;
+
                   this.Planmgmt.updateUserId = this.$store.getters.token;
                   this.Planmgmt.updateDeptNm = this.$store.getters.deptNm;
                   this.Planmgmt.updateDeptCd = this.$store.getters.deptCd;
@@ -930,7 +882,7 @@ export default {
               confirmCallback: () => {
                 this.nextUpdateFlag = true;
                 this.nextInsertFlag = true;
-                this.Planmgmt.tempAssessYear = 0;
+
                 this.Planmgmt.updateUserId = this.$store.getters.token;
                 this.Planmgmt.updateDeptNm = this.$store.getters.deptNm;
                 this.Planmgmt.updateDeptCd = this.$store.getters.deptCd;
@@ -952,10 +904,6 @@ export default {
         message: 'L0000005899', // 결재완료되었습니다.
         type: 'success', // success / info / warning / error
       });
-      this.Planmgmt.tempAssessYear = [
-        this.Planmgmt.assessStartDate,
-        this.Planmgmt.assessEndDate,
-      ];
 
       this.isEdit = false;
       this.isAppr = false;
@@ -969,11 +917,6 @@ export default {
       this.closePopup();
     },
     btnSaveClickedCallback2(result) {
-      this.Planmgmt.tempAssessYear = [
-        this.Planmgmt.assessStartDate,
-        this.Planmgmt.assessEndDate,
-      ];
-
       this.isEdit = false;
       this.isAppr = false;
       this.updateMode = true;
@@ -990,10 +933,6 @@ export default {
         message: 'L0000005881', // 입력 완료되었습니다.
         type: 'success', // success / info / warning / error
       });
-      this.Planmgmt.tempAssessYear = [
-        this.Planmgmt.assessStartDate,
-        this.Planmgmt.assessEndDate,
-      ];
 
       this.isComplete = false;
       this.updateMode = true;
@@ -1010,10 +949,6 @@ export default {
         message: 'M0000000006',
         type: 'success', // success / info / warning / error
       });
-      this.Planmgmt.tempAssessYear = [
-        this.Planmgmt.assessStartDate,
-        this.Planmgmt.assessEndDate,
-      ];
 
       this.isEdit = false;
       this.updateMode = true;
@@ -1026,10 +961,7 @@ export default {
     },
     btnInsertClickedCallback(result) {
       this.Planmgmt.assessPlanNo = result.data;
-      this.Planmgmt.tempAssessYear = [
-        this.Planmgmt.assessStartDate,
-        this.Planmgmt.assessEndDate,
-      ];
+
       window.getApp.$emit('ALERT', {
         title: 'L0000003395',
         message: 'M0000000006',
@@ -1144,8 +1076,7 @@ export default {
         type: 'info', // success / info / warning / error
         confirmCallback: () => {
           // 결재요청팝업 버튼 표시여부
-          this.Planmgmt.assessStartDate = this.Planmgmt.tempAssessYear[0];
-          this.Planmgmt.assessEndDate = this.Planmgmt.tempAssessYear[1];
+
           this.Planmgmt.updateUserId = this.$store.getters.token;
           this.Planmgmt.updateDeptNm = this.$store.getters.deptNm;
           this.Planmgmt.updateDeptCd = this.$store.getters.deptCd;
@@ -1183,6 +1114,29 @@ export default {
       this.popupOptions.visible = false;
       this.getDetail();
       this.deptReLoad = !this.deptReLoad;
+    },
+    btnSearchUserClicked() {
+      this.popupOptions.target = () =>
+        import(`${'@/pages/manage/user/userSearch.vue'}`);
+      this.popupOptions.param = {
+        plantCd: this.Planmgmt.plantCd,
+        deptCd: this.Planmgmt.deptCd,
+      };
+      this.popupOptions.title = 'L0000001466'; // 사용자검색
+      this.popupOptions.visible = true;
+      this.popupOptions.closeCallback = this.closePopupSearchUser;
+    },
+    closePopupSearchUser(data) {
+      this.popupOptions.target = null;
+      this.popupOptions.visible = false;
+      if (data.user) {
+        this.Planmgmt.userNm = data.user.userNm;
+        this.Planmgmt.userId = data.user.userId;
+      }
+    },
+    clear() {
+      this.Planmgmt.userId = null;
+      this.Planmgmt.userNm = null;
     },
   },
 };

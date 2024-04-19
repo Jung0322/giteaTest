@@ -539,6 +539,40 @@ export default {
 
         return;
       }
+      if (this.Planmgmt.planmgmtDeptList.length === 0) {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395' /* 안내 */,
+          message:
+            '평가대상 작업 목록을 최소 1건 이상 등록해주세요.' /* 평가대상 작업 목록을 최소 1건 이상 등록해주세요. */,
+          type: 'warning', // success / info / warning / error
+        });
+
+        return;
+      }
+      // 입력되지 않은 날짜 검사
+      let dateFlag = true;
+      this.$_.forEach(this.Planmgmt.planmgmtDeptList, (item) => {
+        if (!item.assessStartDt) {
+          dateFlag = false;
+          return;
+        }
+
+        if (!item.assessEndDt) {
+          dateFlag = false;
+          return;
+        }
+      });
+      // 평가대상 작업 목록 중 날짜가 입력되지 않은 행이 있다면 에러메세지
+      if (dateFlag === false) {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395' /* 안내 */,
+          message:
+            '평가대상 작업 목록 중 평가 시작일, 또는 종료일이 입력되지 않은 행이 존재합니다.' /* 평가대상 작업 목록 중 평가 시작일, 또는 종료일이 입력되지 않은 행이 존재합니다. */,
+          type: 'warning', // success / info / warning / error
+        });
+
+        return;
+      }
 
       if (flag === 'insert') {
         this.nextInsert();
