@@ -49,6 +49,20 @@
         <b-card>
           <b-row>
             <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
+              <!-- 사업장 -->
+              <y-plant
+                :width="8"
+                type="edit"
+                :editable="editable"
+                :disabled="disabled"
+                name="plantCd"
+                :required="true"
+                v-model="mgtCalendar.plantCd"
+                v-validate="'required'"
+                :state="validateState('plantCd')"
+              ></y-plant>
+            </b-col>
+            <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
               <!-- 일정유형 -->
               <y-select
                 :width="8"
@@ -128,32 +142,7 @@
                 v-model="mgtCalendar.planContents"
               ></y-textarea>
             </b-col>
-            <!-- <b-col sm="12">
-              <div slot="buttonGroup" class="float-right mb-1">
-                <y-btn v-if="editable && !disabled" title="L0000002892" color="orange" @btnClicked="btnAdd" />  추가 
-                <y-btn v-if="editable && !disabled" title="L0000002620" color="red" @btnClicked="btnDelete" />  제외 
-              </div>
-               일정 참여자 목록 
-              <y-data-table
-                ref="dataTableIn"
-                :height="gridOptions.height"
-                :headers="gridOptions.header"
-                :items="mgtCalendar.scehduleManagementPsns"
-                :editable="editable"
-                :print="true"
-                v-model="selectedValue"
-                label="L0000002276"
-                :popMode="true"
-              >
-                <el-table-column
-                  v-if="editable && !disabled"
-                  type="selection"
-                  slot="selection"
-                  align="center"
-                  width="55"
-                ></el-table-column>
-              </y-data-table>
-            </b-col> -->
+
             <b-col sm="12" class="h100p">
               <y-auigrid
                 ref="yAuiGrid"
@@ -269,26 +258,7 @@ export default {
     saveAttachFiles: [],
     attachFileGrps: [],
   }),
-  watch: {
-    'mgtCalendar.mgtCalKindCd'() {
-      if (this.mgtCalendar.mgtCalKindCd === 'MCL02') {
-        // 월간
-        this.periodType = 'month';
-      } else if (this.mgtCalendar.mgtCalKindCd === 'MCL03') {
-        // 연간
-        this.periodType = 'year';
-      } else {
-        // 일간, 주간
-        this.periodType = 'date';
-      }
-      // 화면 첫진입 체크 / periodTemp 초기화
-      if (this.isFirst) {
-        this.isFirst = false;
-      } else {
-        this.mgtCalendar.periodTemp = [];
-      }
-    },
-  },
+  watch: {},
   beforeMount() {
     Object.assign(this.$data, this.$options.data());
     this.init();
@@ -335,9 +305,17 @@ export default {
           btnClicked: 'btnDeleteUser',
         },
       ];
+      let from = this.$comm.getToday();
+      let to = this.$comm.getCalculatedDate(
+        from,
+        '1m',
+        'YYYY-MM-DD',
+        'YYYY-MM-DD'
+      );
+      this.mgtCalendar.periodTemp = [from, to];
       this.attach = () => import('@/pages/common/attachFile/multiFileUpload');
 
-      this.getComboItems('MGT_CAL_KIND'); // 일정유형(일간,주간,월간,연간)
+      this.getComboItems('MGT_CAL_KIND2'); // 일정유형(일간,주간,월간,연간)
       this.getDetail();
     },
     closePopup() {
@@ -401,7 +379,7 @@ export default {
       this.$http.type = 'GET';
       this.$http.request(
         (_result) => {
-          if (codeGroupCd === 'MGT_CAL_KIND') {
+          if (codeGroupCd === 'MGT_CAL_KIND2') {
             this.scheduleTpItems = this.$_.clone(_result.data);
             this.scheduleTpItems.splice(0, 0, {
               code: null,

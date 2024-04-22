@@ -10,6 +10,10 @@
   <b-container fluid>
     <y-search-box :gridOptions="gridOptions" @enter="getList">
       <b-row slot="search">
+        <!-- 사업장 -->
+        <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
+          <y-plant type="search" v-model="searchParam.plantCd" />
+        </b-col>
         <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
           <!-- 일정유형 -->
           <y-select
@@ -35,21 +39,6 @@
           />
         </b-col>
 
-        <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-3">
-          <!-- 업무유형 -->
-          <y-select
-            :width="8"
-            :comboItems="mgtCalTypeCdItems"
-            itemText="codeNm"
-            itemValue="code"
-            ui="bootstrap"
-            label="L0000001950"
-            name="mgtCalTypeCd"
-            v-model="searchParam.mgtCalTypeCd"
-          ></y-select>
-        </b-col>
-
-        <!-- 제목 추가 -->
         <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-8">
           <!-- 제목 -->
           <y-text
@@ -60,7 +49,6 @@
             v-model="searchParam.title"
           ></y-text>
         </b-col>
-        <!-- -->
 
         <!-- 사용여부 추가 -->
         <b-col sm="6" md="6" lg="6" xl="6" class="col-xxl-8">
@@ -97,9 +85,12 @@
           :showGridCtrl="true"
           :enableCellMerge="true"
           :cellMergeRowSpan="true"
+          :showRowCheckColumn="true"
+          :rowCheckToRadio="true"
           @cellClick="cellClickHandler"
           @getList="getList"
           @openNewPopup="openNewPopup"
+          @btnOpenCopyPopupClick="btnOpenCopyPopupClick"
         />
       </b-col>
     </b-row>
@@ -121,8 +112,7 @@ export default {
       },
       searchParam: {
         period: [], // 기간
-        mgtCalTypeCd: '', // 업무유형
-        // plantCd: '', // 사업장
+        plantCd: '', // 사업장
         useYn: '',
         createUserId: '', // 등록자
         mgtCalKindCd: '', // 일정유형
@@ -146,31 +136,14 @@ export default {
         param: {},
         closeCallback: null,
       },
-      mgtCalTypeCdItems: [],
+
       mgtUseYnNmItems: [],
       scheduleTpItems: [],
+      selectedValue: [],
       searchUrl: '',
     };
   },
-  watch: {
-    'searchParam.mgtCalKindCd'() {
-      if (this.searchParam.mgtCalKindCd === 'MCL02') {
-        // 월간
-        this.periodType = 'month';
-        this.searchParam.period = [];
-      } else if (this.searchParam.mgtCalKindCd === 'MCL03') {
-        // 연간
-        this.periodType = 'year';
-        this.searchParam.period = [];
-      } else {
-        // 일간, 주간
-        if (this.periodType !== '') {
-          this.searchParam.period = [];
-        }
-        this.periodType = '';
-      }
-    },
-  },
+  watch: {},
   //* Vue lifecycle: created, mounted, destroyed, etc */
   beforeCreate() {},
   created() {},
@@ -207,57 +180,7 @@ export default {
         )
       );
       this.searchParam.createUserId = this.$store.getters.token;
-      this.getComboItems('MGT_CAL_KIND'); // 일정유형(일간,주간,월간,연간)
-      this.mgtCalTypeCdItems = [
-        {
-          code: '',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000002519'),
-        } /* 전체 */,
-        {
-          code: '1',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000003969'),
-        } /* 일정 */,
-        {
-          code: '2',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001221'),
-        } /* 변경관리 */,
-        {
-          code: '3',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001870'),
-        } /* 안전점검 */,
-        {
-          code: '4',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001606'),
-        } /* 설비점검 */,
-        {
-          code: '5',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001753'),
-        } /* 시설점검 */,
-        {
-          code: '6',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000000276'),
-        } /* 개선조치 */,
-        {
-          code: '7',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000003970'),
-        } /* 교육 */,
-        {
-          code: '8',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000002147'),
-        } /* 위험성평가 */,
-        {
-          code: '9',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001417'),
-        } /* 사업장 무재해 */,
-        {
-          code: '10',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000001290'),
-        } /* 부서 무재해 */,
-        {
-          code: '11',
-          codeNm: this.$comm.getLangSpecInfoLabel('L0000004658'),
-        } /* 산업안전위원회/협의체 */,
-      ];
+      this.getComboItems('MGT_CAL_KIND2'); // 일정유형(일간,주간,월간,연간)
 
       this.mgtUseYnNmItems = [
         {
@@ -276,14 +199,20 @@ export default {
 
       this.gridOptions.header = [
         {
+          headerText: this.$comm.getLangSpecInfoLabel('L0000001415'),
+          dataField: 'plantNm',
+          width: '130',
+          style: 'center-align',
+        }, // 사업장
+        {
           headerText: this.$comm.getLangSpecInfoLabel('L0000001950'),
-          dataField: 'mgtCalTypeNm',
-          width: '10%',
+          dataField: 'mgtCalKindNm',
+          width: '10%', // 업무유형
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002277'),
           dataField: 'period',
-          width: '16%',
+          width: '16%', // 일정기간
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002616'),
@@ -294,36 +223,42 @@ export default {
             type: 'LinkRenderer',
             baseUrl: 'javascript',
             jsCallback: function (rowIndex, columnIndex, value, item) {},
-          },
+          }, // 제목
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002278'),
           dataField: 'planContents',
           width: '12%',
-          style: 'left-align',
+          style: 'left-align', // 일정내용
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000001439'),
           dataField: 'useYnNm',
-          width: '12%',
+          width: '12%', // 사용여부
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002348'),
           dataField: 'createDeptNm',
-          width: '12%',
+          width: '12%', // 작성부서
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002355'),
           dataField: 'writerUserNm',
-          width: '12%',
+          width: '12%', // 작성자
         },
         {
           headerText: this.$comm.getLangSpecInfoLabel('L0000002352'),
           dataField: 'writerDt',
-          width: '12%',
+          width: '12%', // 작성일
         },
       ];
       this.gridOptions.btns = [
+        {
+          title: this.$comm.getLangSpecInfoLabel('L0000005917'), // 일정 복사 신규등록
+          color: 'orange',
+          btnClicked: 'btnOpenCopyPopupClick',
+          visible: this.editable,
+        },
         {
           title: this.$comm.getLangSpecInfoLabel('L0000001789'),
           color: 'orange',
@@ -343,6 +278,26 @@ export default {
 
       this.getList();
     },
+    // 일정 복사 신규등록
+    btnOpenCopyPopupClick() {
+      let isValid = false;
+      this.selectedValue = this.YAuiGrid.getCheckedRowItemsAll();
+      isValid = this.selectedValue && this.selectedValue.length === 1;
+      if (isValid) {
+        let data = this.selectedValue[0];
+        data.copyFlag = true;
+        this.btnPopupClickedCallback(data);
+      } else {
+        window.getApp.$emit('ALERT', {
+          title: 'L0000003395', // 안내
+          message: 'L0000005918', // 사업장 일정 복사등록 대상을 선택해주세요.
+          type: 'warning',
+        });
+
+        return;
+      }
+    },
+
     // 검색
     getList() {
       this.$http.url = this.searchUrl;
@@ -368,7 +323,7 @@ export default {
       this.$http.type = 'GET';
       this.$http.request(
         (_result) => {
-          if (codeGroupCd === 'MGT_CAL_KIND') {
+          if (codeGroupCd === 'MGT_CAL_KIND2') {
             this.scheduleTpItems = this.$_.clone(_result.data);
             this.scheduleTpItems.splice(0, 0, {
               code: null,
@@ -398,133 +353,146 @@ export default {
     openNewPopup() {
       this.btnPopupClickedCallback();
     },
+    // btnPopupClickedCallback(data) {
+    //   if (
+    //     !data ||
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000003969')
+    //   ) {
+    //     /* 일정 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'./scheduleManagementDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000002273';
+    //     this.popupOptions.param = {
+    //       mgtCalendarNo: data ? data.mgtCalendarNo : 0,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001221')
+    //   ) {
+    //     /* 변경관리 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../../saf/change/changeDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000001223'; /* 변경관리 상세 */
+    //     this.popupOptions.param = {
+    //       safChngNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001870')
+    //   ) {
+    //     /* 안전점검 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../../saf/check/checkResultDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000003976'; /* 안전점검 상세 */
+    //     this.popupOptions.param = {
+    //       safCheckScheduleNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001606')
+    //   ) {
+    //     /* 설비점검 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../../saf/facilityCheck/facilChkResultDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000001607'; /* 설비점검 상세 */
+    //     this.popupOptions.param = {
+    //       safFacilChkNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001753')
+    //   ) {
+    //     /* 시설점검 */
+    //     this.popupOptions.target = () =>
+    //       import(
+    //         `${'../../saf/facilityInspection/facilityInspectionResultDetail.vue'}`
+    //       );
+    //     this.popupOptions.title = 'L0000003975'; /* 시설점검 상세 */
+    //     this.popupOptions.param = {
+    //       comFacilityCheckScheduleNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000000276')
+    //   ) {
+    //     /* 개선조치 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../../impr/improveDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000003974'; /* 개선조치 상세 */
+    //     this.popupOptions.param = {
+    //       safImprActNo: data ? data.mgtCalendarNo : 0,
+    //       flag: 'DETAIL',
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000003970')
+    //   ) {
+    //     /* 교육 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../../education/eduResult.vue'}`);
+    //     this.popupOptions.title = 'L0000003973'; /* 교육 상세 */
+    //     this.popupOptions.param = {
+    //       safEduMstNo: data ? data.mgtCalendarNo : 0,
+    //       search: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000002147')
+    //   ) {
+    //     this.popupOptions.target = () =>
+    //       import(`${'@/pages/rsa/jsa/assessAction/assessActionDetail.vue'}`);
+    //     this.popupOptions.title = 'L0000002148'; /* 위험성평가 상세 */
+    //     this.popupOptions.param = {
+    //       assessNm: data ? data.title : '',
+    //       assessPlanNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000004658')
+    //   ) {
+    //     this.popupOptions.target = () =>
+    //       import(
+    //         `${'@/pages/mgt/industrialSafetyHealthCommittee/industrialSafetyHealthCommitteeDetail.vue'}`
+    //       );
+    //     this.popupOptions.title = 'L0000004658'; // 산업안전위원회/협의체
+    //     this.popupOptions.param = {
+    //       committeeConfNo: data ? data.mgtCalendarNo : 0,
+    //       progressStepCd: data ? data.progressStepCd : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001417')
+    //   ) {
+    //     /* 사업장 무재해 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../noaccident/createNoAccident.vue'}`);
+    //     this.popupOptions.title = 'L0000003972'; /* 사업장 무재해 상세 */
+    //     this.popupOptions.param = {
+    //       safNoAccidentNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   } else if (
+    //     data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001290')
+    //   ) {
+    //     /* 부서 무재해 */
+    //     this.popupOptions.target = () =>
+    //       import(`${'../noaccident/createDeptNoAccident.vue'}`);
+    //     this.popupOptions.title = 'L0000003971'; /* 부서 무재해 상세 */
+    //     this.popupOptions.param = {
+    //       safNoAccidentDeptNo: data ? data.mgtCalendarNo : 0,
+    //       isSearch: true,
+    //     };
+    //   }
+    //   this.popupOptions.visible = true;
+    //   this.popupOptions.width = '80%';
+    //   this.popupOptions.top = '10px';
+    //   this.popupOptions.closeCallback = this.closePopup;
+    // },
     btnPopupClickedCallback(data) {
-      if (
-        !data ||
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000003969')
-      ) {
-        /* 일정 */
-        this.popupOptions.target = () =>
-          import(`${'./scheduleManagementDetail.vue'}`);
-        this.popupOptions.title = 'L0000002273';
-        this.popupOptions.param = {
-          mgtCalendarNo: data ? data.mgtCalendarNo : 0,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001221')
-      ) {
-        /* 변경관리 */
-        this.popupOptions.target = () =>
-          import(`${'../../saf/change/changeDetail.vue'}`);
-        this.popupOptions.title = 'L0000001223'; /* 변경관리 상세 */
-        this.popupOptions.param = {
-          safChngNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001870')
-      ) {
-        /* 안전점검 */
-        this.popupOptions.target = () =>
-          import(`${'../../saf/check/checkResultDetail.vue'}`);
-        this.popupOptions.title = 'L0000003976'; /* 안전점검 상세 */
-        this.popupOptions.param = {
-          safCheckScheduleNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001606')
-      ) {
-        /* 설비점검 */
-        this.popupOptions.target = () =>
-          import(`${'../../saf/facilityCheck/facilChkResultDetail.vue'}`);
-        this.popupOptions.title = 'L0000001607'; /* 설비점검 상세 */
-        this.popupOptions.param = {
-          safFacilChkNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001753')
-      ) {
-        /* 시설점검 */
-        this.popupOptions.target = () =>
-          import(
-            `${'../../saf/facilityInspection/facilityInspectionResultDetail.vue'}`
-          );
-        this.popupOptions.title = 'L0000003975'; /* 시설점검 상세 */
-        this.popupOptions.param = {
-          comFacilityCheckScheduleNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000000276')
-      ) {
-        /* 개선조치 */
-        this.popupOptions.target = () =>
-          import(`${'../../impr/improveDetail.vue'}`);
-        this.popupOptions.title = 'L0000003974'; /* 개선조치 상세 */
-        this.popupOptions.param = {
-          safImprActNo: data ? data.mgtCalendarNo : 0,
-          flag: 'DETAIL',
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000003970')
-      ) {
-        /* 교육 */
-        this.popupOptions.target = () =>
-          import(`${'../../education/eduResult.vue'}`);
-        this.popupOptions.title = 'L0000003973'; /* 교육 상세 */
-        this.popupOptions.param = {
-          safEduMstNo: data ? data.mgtCalendarNo : 0,
-          search: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000002147')
-      ) {
-        this.popupOptions.target = () =>
-          import(`${'@/pages/rsa/jsa/assessAction/assessActionDetail.vue'}`);
-        this.popupOptions.title = 'L0000002148'; /* 위험성평가 상세 */
-        this.popupOptions.param = {
-          assessNm: data ? data.title : '',
-          assessPlanNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000004658')
-      ) {
-        this.popupOptions.target = () =>
-          import(
-            `${'@/pages/mgt/industrialSafetyHealthCommittee/industrialSafetyHealthCommitteeDetail.vue'}`
-          );
-        this.popupOptions.title = 'L0000004658'; // 산업안전위원회/협의체
-        this.popupOptions.param = {
-          committeeConfNo: data ? data.mgtCalendarNo : 0,
-          progressStepCd: data ? data.progressStepCd : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001417')
-      ) {
-        /* 사업장 무재해 */
-        this.popupOptions.target = () =>
-          import(`${'../noaccident/createNoAccident.vue'}`);
-        this.popupOptions.title = 'L0000003972'; /* 사업장 무재해 상세 */
-        this.popupOptions.param = {
-          safNoAccidentNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      } else if (
-        data.mgtCalTypeNm === this.$comm.getLangSpecInfoLabel('L0000001290')
-      ) {
-        /* 부서 무재해 */
-        this.popupOptions.target = () =>
-          import(`${'../noaccident/createDeptNoAccident.vue'}`);
-        this.popupOptions.title = 'L0000003971'; /* 부서 무재해 상세 */
-        this.popupOptions.param = {
-          safNoAccidentDeptNo: data ? data.mgtCalendarNo : 0,
-          isSearch: true,
-        };
-      }
+      this.popupOptions.target = () =>
+        import(`${'./scheduleManagementDetail.vue'}`);
+      this.popupOptions.title = 'L0000002273'; // 일정 등록/수정
+      this.popupOptions.param = {
+        mgtCalendarNo: data ? data.mgtCalendarNo : 0,
+        copyFlag: data ? data.copyFlag : false,
+      };
       this.popupOptions.visible = true;
       this.popupOptions.width = '80%';
       this.popupOptions.top = '10px';

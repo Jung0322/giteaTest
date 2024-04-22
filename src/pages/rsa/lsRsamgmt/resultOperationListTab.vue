@@ -87,7 +87,7 @@ export default {
         header: [],
         data: [],
         btns: [],
-        height: 'auto',
+        height: '700',
       },
       editable: true,
       selectedValues: [], // 그리드 선택 목록
@@ -158,6 +158,7 @@ export default {
         });
       }, 500);
     },
+
     getList() {
       if (!this.Planmgmt.assessRsltNo) return;
       this.$http.url = this.$format(this.detailUrl, this.Planmgmt.assessRsltNo);
@@ -324,6 +325,12 @@ export default {
                   width: 120,
                   dataType: 'numeric',
                   editable: this.apprMode,
+                  headerStyle: 'aui-grid-user-custom-header',
+                  headerTooltip: {
+                    // 헤더 툴팁 표시 HTML 양식
+                    show: true,
+                    tooltipHtml: help1Html,
+                  },
                   editRenderer: {
                     type: 'InputEditRenderer',
                     onlyNumeric: true,
@@ -337,6 +344,13 @@ export default {
                   width: 120,
                   dataType: 'numeric',
                   editable: this.apprMode,
+                  headerStyle: 'aui-grid-user-custom-header',
+
+                  headerTooltip: {
+                    // 헤더 툴팁 표시 HTML 양식
+                    show: true,
+                    tooltipHtml: help2Html,
+                  },
                   editRenderer: {
                     type: 'InputEditRenderer',
                     onlyNumeric: true,
@@ -350,6 +364,14 @@ export default {
                   width: 120,
                   editable: false,
                   dataType: 'numeric',
+
+                  headerStyle: 'aui-grid-user-custom-header',
+
+                  headerTooltip: {
+                    // 헤더 툴팁 표시 HTML 양식
+                    show: true,
+                    tooltipHtml: help3Html,
+                  },
                   editRenderer: {
                     type: 'InputEditRenderer',
                     onlyNumeric: true,
@@ -518,510 +540,245 @@ export default {
       });
       this.YAuiGrid.setGridData(tempGridData);
     },
-    // renderPhaseHeader(h, { column }) {
-    //   if (column.property === 'frequency') {
-    //     return h(
-    //       'el-popover',
-    //       {
-    //         props: {
-    //           placement: 'top',
-    //           width: '1000',
-    //           trigger: 'hover',
-    //         },
-    //       },
-    //       [
-    //         h('table', { class: 'assess-popover-table' }, [
-    //           h('thead', [
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '16',
-    //                     style: 'background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '위험발생빈도'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '2',
-    //                     rowspan: '2',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '구분'
-    //               ),
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '5',
-    //                     style:
-    //                       'text-align: center;  background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '내 용'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style:
-    //                       'text-align: center;  background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '사고 유형에 대한 결과 판단'
-    //               ),
-
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style:
-    //                       'text-align: center;  background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '추가 판단 고려 요소'
-    //               ),
-    //             ]),
-    //           ]),
-    //           h('tbody', [
-    //             h('tr', [
-    //               h('td', '5'),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '매우높음'
-    //               ),
-    //               h('td', [
-    //                 '● 사고 발생 가능성이 매우 높음',
-    //                 h('br'),
-    //                 '(1년 內 아차사고 발생 가능)',
-    //                 h('br'),
-    //                 '● 유해인자 발생 설비(발생원)에 접촉하여 8시간 이상 연속 근무하는 경우',
-    //               ]),
-
-    //               h('td', [
-    //                 '○ 피해가 발생할 가능성이 매우 높음 (1년 內 아차사고 발생 가능) 해당 안전대책이 되어 있지 않고, 표시·표지가 있어도 제대로 갖추어져 있지 않은 것이 많으며, 안전수칙/작업표준 등도 없는 경우',
-    //                 h('br'),
-
-    //                 '○ 화학물질의 노출수준이 100%초과',
-    //               ]),
-    //             ]),
-    //             h('tr', [
-    //               h('td', '4'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '높음'),
-    //               h('td', [
-    //                 '● 사고 발생 가능성이 높음 (분기 1회)',
-    //                 h('br'),
-    //                 '● 유해인자 발생 설비(발생원)에 접촉하여 6시간 이상 ~ 8시간 미만 연속 근무하는 경우',
-    //               ]),
-
-    //               h('td', [
-    //                 '○ 피해가 발생할 가능성이 높음 (분기 1회) 가드/방호덮개, 기타 안전장치가 없거나 제대로 설치되지 않은 것이 많고, 안전수칙/표준, 비상정지장치, 표시/표지 등이 어느 정도 설치되어 있으나, 지키기 어렵고 많은 주의를 해야 함',
-    //                 h('br'),
-    //                 '○ 화학물질의 노출수준이 50%초과 ~ 100%이하',
-    //               ]),
-    //             ]),
-    //             h('tr', [
-    //               h('td', '3'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '보통'),
-    //               h('td', [
-    //                 '● 사고 발생 가능성이 있음 (반기 1회)',
-    //                 h('br'),
-    //                 '● 유해인자 발생 설비(발생원)에 접촉하여 4시간 이상 ~ 6시간 미만 연속 근무하는 경우',
-    //               ]),
-
-    //               h('td', [
-    //                 '○ 부주의하면 피해가 발생할 가능성이 있음 (반기 1회) 가드/방호덮개 또는 안전장치 등은 설치되어 있지만, 가드가 낮거나 간격이 벌어져 있는 등 제대로 갖추어져 있지 않거나, 위험영역 접근, 위험원과의 접촉이 있을 수 있으며, 안전수칙/작업표준 등은 있지만 준수하기 어려운 점이 있음',
-
-    //                 h('br'),
-    //                 '○ 화학물질의 노출수준이 10% 초과 ~ 50% 이하',
-    //               ]),
-    //             ]),
-    //             h('tr', [
-    //               h('td', '2'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '낮음'),
-    //               h('td', [
-    //                 '● 사고 발생 가능성 낮음 (1년 1회)',
-    //                 h('br'),
-    //                 '● 유해인자 발생 설비(발생원)에 접촉하여 4시간 미만 연속 근무하는 경우',
-    //               ]),
-
-    //               h('td', [
-    //                 '○ 부주의하면 피해가 발생할 가능성이 있음 (년 1회) 가드/방호덮개 또는 안전장치 등은 설치되어 있지만, 가드가 낮거나 간격이 벌어져 있는 등 제대로 갖추어져 있지 않거나, 위험영역 접근, 위험원과의 접촉이 있을 수 있으며, 안전수칙/작업표준 등은 있지만 일부 준수하기 어려운 점이 있음',
-
-    //                 h('br'),
-    //                 '○ 화학물질의 노출수준이 10%이하',
-    //               ]),
-    //             ]),
-    //             h('tr', [
-    //               h('td', '1'),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '매우낮음'
-    //               ),
-    //               h('td', [
-    //                 '● 사고 발생 가능성 거의 없음 (3년 1회)',
-    //                 h('br'),
-    //                 '● 유해인자 발생 설비(발생원)에 접촉하여 1시간 미만 연속 근무하는 경우',
-    //               ]),
-
-    //               h('td', [
-    //                 '○ 피해가 발생할 가능성이 거의 없음 가드·방호덮개 등으로 보호되고 있어, 안전장치가 설치되어 있으며, 위험영역에서의 출입이 곤란한 상태이고, 안전수칙·작업표준(서) 등이 정비되어 있고 준수하기 쉬우나, 피해의 가능성이 남아 있음',
-
-    //                 h('br'),
-    //                 '○ 화학물질의 노출수준이 1%이하',
-    //               ]),
-    //             ]),
-    //           ]),
-    //         ]),
-    //         h(
-    //           'span',
-    //           {
-    //             slot: 'reference',
-    //           },
-    //           column.label
-    //         ),
-    //       ]
-    //     );
-    //   } else if (column.property === 'strong') {
-    //     return h(
-    //       'el-popover',
-    //       {
-    //         props: {
-    //           placement: 'top',
-    //           width: '700',
-    //           trigger: 'hover',
-    //         },
-    //       },
-    //       [
-    //         h('table', { class: 'assess-popover-table' }, [
-    //           h('thead', [
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '6',
-    //                     style: 'background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '위험발생강도'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '2',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '위험강도 단계'
-    //               ),
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '5',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '내 용'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '2',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '중대성'
-    //               ),
-
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '인적/물적/조업'
-    //               ),
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '소음'
-    //               ),
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '유해인자'
-    //               ),
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '질병'
-    //               ),
-    //             ]),
-    //           ]),
-    //           h('tbody', [
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '4'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '최대'),
-    //               h(
-    //                 'td',
-    //                 '사망/8주이상/장해 1~5급\n손실액 5천만원 이상\n조업중지 1일 이상, 벌금 발생'
-    //               ),
-    //               h('td', '90dB 이상'),
-    //               h('td', '유해인자 발생수준이 100%초과(보건)'),
-    //               h('td', '직업병 유소견자가 1년내 3명 이상 발생'),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '3'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '대'),
-    //               h(
-    //                 'td',
-    //                 '중상/4주~8주/장해 6~11급\n손실액 1천 ~ 5천\n조업중지 1일 이상, 과태료 발생'
-    //               ),
-    //               h('td', '85 ~ 89dB'),
-    //               h('td', '유해인자 발생수준이 80%초과 ~ 100%미만(보건)'),
-    //               h('td', '직업병 유소견자가 1년내 2명 발생'),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '2'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '중'),
-    //               h(
-    //                 'td',
-    //                 '보통/4일~4주/장해 12~14급\n손실액 1백만원 ~ 1천\n조업중지 없으나 과태료 발생'
-    //               ),
-    //               h('td', '80 ~ 84dB'),
-    //               h('td', '유해인자 발생수준이 50%초과 ~ 80%미만(보건)'),
-    //               h('td', '직업성 질환 요 관찰자 1년내 1명 이상 발생'),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '1'),
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '소'),
-    //               h(
-    //                 'td',
-    //                 '경미/4일미만/장해\n손실액 1백만원 미만\n조업중지 無'
-    //               ),
-    //               h('td', '80dB 미만'),
-    //               h('td', '유해인자 발생수준이 50%미만(보건)'),
-    //               h('td', '직업성 질환 요 관찰자 1년내 1명 발생 가능성 있음'),
-    //             ]),
-    //           ]),
-    //           h('tfoot', [
-    //             h('tr', [
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '7', style: 'font-weight: bold;' } },
-    //                 '※ 유해인자 및 작업환경적 요인의 경우 보호구 등의 안전대책이 반영되어 있는 경우에 등급 1단계 하향 가능함'
-    //               ),
-    //             ]),
-    //           ]),
-    //         ]),
-    //         h(
-    //           'span',
-    //           {
-    //             slot: 'reference',
-    //           },
-    //           column.label
-    //         ),
-    //       ]
-    //     );
-    //   } else if (column.property === 'risk') {
-    //     return h(
-    //       'el-popover',
-    //       {
-    //         props: {
-    //           placement: 'top',
-    //           width: '800',
-    //           trigger: 'hover',
-    //         },
-    //       },
-    //       [
-    //         h('table', { class: 'assess-popover-table' }, [
-    //           h('thead', [
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '8',
-    //                     style: 'background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '위험도 평가'
-    //               ),
-    //             ]),
-
-    //             h('tr', [
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '2',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '위험도 수준'
-    //               ),
-
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     colspan: '5',
-    //                     style: 'text-align: center; background-color: #f3f2f2;',
-    //                   },
-    //                 },
-    //                 '관 리 기 준'
-    //               ),
-
-    //               h(
-    //                 'th',
-    //                 {
-    //                   attrs: {
-    //                     style:
-    //                       'text-align: center; background-color: #f3f2f2; width: 150px;',
-    //                   },
-    //                 },
-    //                 '비 고'
-    //               ),
-    //             ]),
-    //           ]),
-    //           h('tbody', [
-    //             h('tr', [
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center; width: 80px;' } },
-    //                 '1 ~ 3'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'width: 150px;' } },
-    //                 '무시할 수 있는 위험'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '5' } },
-    //                 '현재의 안전대책 유지(별도의 조치/개선계획 불필요)'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { rowspan: '2', style: 'text-align: center;' } },
-    //                 '위험 작업 수용'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '4 ~ 6'),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '미미한 위험'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '5' } },
-    //                 '안전정보 및 주기적 표준작업안전교육/표지부착 등의 관리적 대책 필요'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '8 ~ 9'),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '보통 위험'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '5' } },
-    //                 '계획된 정비, 보수기간에 안전대책을 세워야함/환기장치 효율성 검토\n및 성능 개선이나, 작업방법 개선이나 보호구 착용 검토'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { rowspan: '2', style: 'text-align: center;' } },
-    //                 '조건부 위험 작업 수용'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '10 ~ 12'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '중대한 위험'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '5' } },
-    //                 '긴급 임시 안전대책을 세운 후 작업을 하되 계획된 정비․보수기간에 안전대책을\n세워야함/작업환경 개선이 필요함'
-    //               ),
-    //             ]),
-    //             h('tr', [
-    //               h('td', { attrs: { style: 'text-align: center;' } }, '16'),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '허용불가 위험'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { colspan: '5' } },
-    //                 '즉시 작업중단(즉시 개선)/종합적인 작업환경관리수준 평가 실시\n(전문가 상담)'
-    //               ),
-    //               h(
-    //                 'td',
-    //                 { attrs: { style: 'text-align: center;' } },
-    //                 '위험작업 불허'
-    //               ),
-    //             ]),
-    //           ]),
-    //         ]),
-    //         h(
-    //           'span',
-    //           {
-    //             slot: 'reference',
-    //           },
-    //           column.label
-    //         ),
-    //       ]
-    //     );
-    //   } else {
-    //     return column.label;
-    //   }
-    // },
   },
 };
+let help1Html = '';
+help1Html += '<table  class="assess-popover-table" style="width:1500px;">';
+help1Html += '  <thead style="background-color: #f3f2f2;">';
+help1Html += '    <tr>';
+help1Html +=
+  '      <th colspan="2" rowspan="2" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">구분</th>';
+help1Html +=
+  '      <th colspan="5" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">내 용</th>';
+help1Html += '    </tr>';
+help1Html += '    <tr>';
+help1Html +=
+  '      <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">사고 유형에 대한 결과 판단</th>';
+help1Html +=
+  '      <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">추가 판단 고려 요소</th>';
+help1Html += '    </tr>';
+help1Html += '  </thead>';
+help1Html += '  <tbody>';
+help1Html += '    <tr>';
+help1Html += '      <td>5</td>';
+help1Html +=
+  '      <td style="text-align: center; font-size: 15px;">매우높음</td>';
+help1Html += '      <td style ="font-size: 15px;" >';
+help1Html += '        ● 사고 발생 가능성이 매우 높음<br>';
+help1Html += '        (1년 內 아차사고 발생 가능)<br>';
+help1Html +=
+  '        ● 유해인자 발생 설비(발생원)에 접촉하여 8시간 이상 연속 근무하는 경우';
+help1Html += '      </td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html +=
+  '        ○ 피해가 발생할 가능성이 매우 높음 (1년 內 아차사고 발생 가능) 해당 안전대책이 되어 있지 않고, 표시·표지가 있어도 제대로 갖추어져 있지 않은 것이 많으며, 안전수칙/작업표준 등도 없는 경우<br>';
+help1Html += '        ○ 화학물질의 노출수준이 100%초과';
+help1Html += '      </td>';
+help1Html += '    </tr>';
+help1Html += '    <tr>';
+help1Html += '      <td>4</td>';
+help1Html += '      <td style="text-align: center; font-size: 15px;">높음</td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html += '        ● 사고 발생 가능성이 높음 (분기 1회)<br>';
+help1Html +=
+  '        ● 유해인자 발생 설비(발생원)에 접촉하여 6시간 이상 ~ 8시간 미만 연속 근무하는 경우';
+help1Html += '      </td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html +=
+  '        ○ 피해가 발생할 가능성이 높음 (분기 1회) 가드/방호덮개, 기타 안전장치가 없거나 제대로 설치되지 않은 것이 많고, 안전수칙/표준, 비상정지장치, 표시/표지 등이 어느 정도 설치되어 있으나, 지키기 어렵고 많은 주의를 해야 함<br>';
+help1Html += '        ○ 화학물질의 노출수준이 50%초과 ~ 100%이하';
+help1Html += '      </td>';
+help1Html += '    </tr>';
+help1Html += '    <tr>';
+help1Html += '      <td>3</td>';
+help1Html += '      <td style="text-align: center; font-size: 15px;">보통</td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html += '        ● 사고 발생 가능성이 있음 (반기 1회)<br>';
+help1Html +=
+  '        ● 유해인자 발생 설비(발생원)에 접촉하여 4시간 이상 ~ 6시간 미만 연속 근무하는 경우';
+help1Html += '      </td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html +=
+  '        ○ 부주의하면 피해가 발생할 가능성이 있음 (반기 1회) 가드/방호덮개 또는 안전장치 등은 설치되어 있지만, 가드가 낮거나 간격이 벌어져 있는 등 제대로 갖추어져 있지 않거나, 위험영역 접근, 위험원과의 접촉이 있을 수 있으며, 안전수칙/작업표준 등은 있지만 준수하기 어려운 점이 있음<br>';
+help1Html += '        ○ 화학물질의 노출수준이 10% 초과 ~ 50% 이하';
+help1Html += '      </td>';
+help1Html += '    </tr>';
+help1Html += '    <tr>';
+help1Html += '      <td>2</td>';
+help1Html += '      <td style="text-align: center; font-size: 15px;">낮음</td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html += '        ● 사고 발생 가능성 낮음 (1년 1회)<br>';
+help1Html +=
+  '        ● 유해인자 발생 설비(발생원)에 접촉하여 4시간 미만 연속 근무하는 경우';
+help1Html += '      </td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html +=
+  '        ○ 부주의하면 피해가 발생할 가능성이 있음 (년 1회) 가드/방호덮개 또는 안전장치 등은 설치되어 있지만, 가드가 낮거나 간격이 벌어져 있는 등 제대로 갖추어져 있지 않거나, 위험영역 접근, 위험원과의 접촉이 있을 수 있으며, 안전수칙/작업표준 등은 있지만 준수하기 어려운 점이 있음<br>';
+help1Html += '        ○ 화학물질의 노출수준이 1% 초과 ~ 10% 이하';
+help1Html += '      </td>';
+help1Html += '    </tr>';
+help1Html += '    <tr>';
+help1Html += '      <td>1</td>';
+help1Html +=
+  '      <td style="text-align: center; font-size: 15px;">매우낮음</td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html += '        ● 사고 발생 가능성 거의 없음 (3년 1회)<br>';
+help1Html +=
+  '        ● 유해인자 발생 설비(발생원)에 접촉하여 1시간 이상 ~ 4시간 미만 연속 근무하는 경우';
+help1Html += '      </td>';
+help1Html += '      <td style ="font-size: 15px;">';
+help1Html += '        ○ 일부 참작(부분적)한 안전장치 및 안전조치가 있음<br>';
+help1Html += '        ○ 화학물질의 노출수준이 0.1% 초과 ~ 1% 이하';
+help1Html += '      </td>';
+help1Html += '    </tr>';
+help1Html += '  </tbody>';
+help1Html += '</table>';
+
+let help2Html = '';
+help2Html += '  <table class="assess-popover-table">';
+help2Html += '    <thead>';
+help2Html += '      <tr>';
+help2Html +=
+  '        <th colspan="6" style="background-color: #f3f2f2; text-align: center; font-size: 22px;">위험발생강도</th>';
+help2Html += '      </tr>';
+help2Html += '      <tr>';
+help2Html +=
+  '        <th colspan="2" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">위험강도 단계</th>';
+help2Html +=
+  '        <th colspan="5" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">내 용</th>';
+help2Html += '      </tr>';
+help2Html += '      <tr>';
+help2Html +=
+  '        <th colspan="2" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">중대성</th>';
+help2Html +=
+  '        <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">인적/물적/조업</th>';
+help2Html +=
+  '        <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">소음</th>';
+help2Html +=
+  '        <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">유해인자</th>';
+help2Html +=
+  '        <th style="text-align: center; background-color: #f3f2f2; font-size: 22px;">질병</th>';
+help2Html += '      </tr>';
+help2Html += '    </thead>';
+help2Html += '    <tbody>';
+help2Html += '      <tr>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">4</td>';
+help2Html +=
+  '        <td style="text-align: center; font-size: 15px;">최대</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">사망/8주이상/장해 1~5급<br>손실액 5천만원 이상<br>조업중지 1일 이상, 벌금 발생</td>';
+help2Html += '        <td style="font-size: 15px;">90dB 이상</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">유해인자 발생수준이 100%초과(보건)</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">직업병 유소견자가 1년내 3명 이상 발생</td>';
+help2Html += '      </tr>';
+help2Html += '      <tr>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">3</td>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">대</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">중상/4주~8주/장해 6~11급<br>손실액 1천 ~ 5천<br>조업중지 1일 이상, 과태료 발생</td>';
+help2Html += '        <td style="font-size: 15px;">85 ~ 89dB</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">유해인자 발생수준이 80%초과 ~ 100%미만(보건)</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">직업병 유소견자가 1년내 2명 발생</td>';
+help2Html += '      </tr>';
+help2Html += '      <tr>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">2</td>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">중</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">보통/4일~4주/장해 12~14급<br>손실액 1백만원 ~ 1천<br>조업중지 없으나 과태료 발생</td>';
+help2Html += '        <td style="font-size: 15px;">80 ~ 84dB</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">유해인자 발생수준이 50%초과 ~ 80%미만(보건)</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">직업성 질환 요 관찰자 1년내 1명 이상 발생</td>';
+help2Html += '      </tr>';
+help2Html += '      <tr>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">1</td>';
+help2Html += '        <td style="text-align: center; font-size: 15px;">소</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">경미/4일미만/장해<br>손실액 1백만원 미만<br>조업중지 無</td>';
+help2Html += '        <td style="font-size: 15px;">80dB 미만</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">유해인자 발생수준이 50%미만(보건)</td>';
+help2Html +=
+  '        <td style="font-size: 15px;">직업성 질환 요 관찰자 1년내 1명 발생 가능성 있음</td>';
+help2Html += '      </tr>';
+help2Html += '    </tbody>';
+help2Html += '    <tfoot>';
+help2Html += '      <tr>';
+help2Html +=
+  '        <td colspan="7" style="font-weight: bold; font-size: 15px;">※ 유해인자 및 작업환경적 요인의 경우 보호구 등의 안전대책이 반영되어 있는 경우에 등급 1단계 하향 가능함</td>';
+help2Html += '      </tr>';
+help2Html += '    </tfoot>';
+help2Html += '  </table>';
+
+let help3Html = '';
+help3Html += '  <table class="assess-popover-table">';
+help3Html += '    <thead>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <th colspan="8" style="background-color: #f3f2f2; text-align: center; font-size: 22px;">위험도 평가</th>';
+help3Html += '      </tr>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <th colspan="2" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">위험도 수준</th>';
+help3Html +=
+  '        <th colspan="5" style="text-align: center; background-color: #f3f2f2; font-size: 22px;">관 리 기 준</th>';
+help3Html +=
+  '        <th style="text-align: center; background-color: #f3f2f2; width: 150px; font-size: 22px;">비 고</th>';
+help3Html += '      </tr>';
+help3Html += '    </thead>';
+help3Html += '    <tbody>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <td style="text-align: center; width: 80px; font-size: 15px;">1 ~ 3</td>';
+help3Html +=
+  '        <td style="width: 150px; font-size: 15px;">무시할 수 있는 위험</td>';
+help3Html +=
+  '        <td colspan="5" style="font-size: 15px;">현재의 안전대책 유지(별도의 조치/개선계획 불필요)</td>';
+help3Html +=
+  '        <td rowspan="2" style="text-align: center; font-size: 15px;">위험 작업 수용</td>';
+help3Html += '      </tr>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">4 ~ 6</td>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">미미한 위험</td>';
+help3Html +=
+  '        <td colspan="5" style="font-size: 15px;">안전정보 및 주기적 표준작업안전교육/표지부착 등의 관리적 대책 필요</td>';
+help3Html += '      </tr>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">8 ~ 9</td>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">보통 위험</td>';
+help3Html +=
+  '        <td colspan="5" style="font-size: 15px;">계획된 정비, 보수기간에 안전대책을 세워야함/환기장치 효율성 검토<br>및 성능 개선이나, 작업방법 개선이나 보호구 착용 검토</td>';
+help3Html +=
+  '        <td rowspan="2" style="text-align: center; font-size: 15px;">조건부 위험 작업 수용</td>';
+help3Html += '      </tr>';
+help3Html += '      <tr>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">10 ~ 12</td>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">중대한 위험</td>';
+help3Html +=
+  '        <td colspan="5" style="font-size: 15px;">긴급 임시 안전대책을 세운 후 작업을 하되 계획된 정비․보수기간에 안전대책을<br>세워야함/작업환경 개선이 필요함</td>';
+help3Html += '      </tr>';
+help3Html += '      <tr>';
+help3Html += '        <td style="text-align: center; font-size: 15px;">16</td>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">허용불가 위험</td>';
+help3Html +=
+  '        <td colspan="5" style="font-size: 15px;">즉시 작업중단(즉시 개선)/종합적인 작업환경관리수준 평가 실시<br>(전문가 상담)</td>';
+help3Html +=
+  '        <td style="text-align: center; font-size: 15px;">위험작업 불허</td>';
+help3Html += '      </tr>';
+help3Html += '    </tbody>';
+help3Html += '  </table>';
 </script>
 <style>
 table.assess-popover-table {
@@ -1029,11 +786,15 @@ table.assess-popover-table {
   border-spacing: 0;
 }
 table.assess-popover-table th {
-  padding: 10px 10px;
+  padding: 10px 15px;
   border: 1px solid #000;
 }
 table.assess-popover-table td {
-  padding: 10px 10px;
+  padding: 10px 15px;
   border: 1px solid #000;
+}
+/* 커스텀 에디터 스타일 */
+.aui-grid-user-custom-header {
+  position: relative;
 }
 </style>
