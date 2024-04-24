@@ -424,6 +424,14 @@ export default {
               },
             });
           } else {
+            if (!this.mgtCalendar.plantCd) {
+              window.getApp.$emit('ALERT', {
+                title: 'L0000003395' /* 안내 */,
+                message: 'M0000000066', // 사업장을 선택하세요.
+                type: 'warning', // success / info / warning / error
+              });
+              return;
+            }
             if (!this.mgtCalendar.mgtCalKindCd) {
               window.getApp.$emit('ALERT', {
                 title: 'L0000003395' /* 안내 */,
